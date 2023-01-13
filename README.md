@@ -12,6 +12,7 @@
 ## On the sample complexity measures for Neural Nets
 * Rademacher, Golowich's Method, Barlett's Method  (https://github.com/mint-vu/backbone_vs_pooling/issues/1)
 * Size-Independent Sample Complexity of Neural Networks (https://arxiv.org/abs/1712.06541) [Their Talk](https://www.youtube.com/watch?v=3nhavy2sUEA)
+* All-layer Margin (https://openreview.net/pdf?id=HJe_yR4Fwr)
 ## Some useful references: 
 
 * [Deep Learning on Sets](https://fabianfuchsml.github.io/learningonsets/#fn:limitations_result)
