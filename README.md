@@ -8,7 +8,7 @@
 * OT-based: SWE, WE, [Regularized optimal transport pooling (ROTP)](https://arxiv.org/pdf/2212.06339.pdf)
 ### Learning based (Attention based)
 * PMA (Set Transformer)
-* ...(working on it)
+* [Trainable OT embedding](https://openreview.net/forum?id=ZK6vTvb84s)
 
 ## Some useful references: 
 
