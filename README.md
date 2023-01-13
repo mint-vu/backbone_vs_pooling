@@ -11,6 +11,7 @@
 * [Trainable OT embedding](https://openreview.net/forum?id=ZK6vTvb84s)
 ## On the sample complexity measures for Neural Nets
 * Rademacher, Golowich's Method, Barlett's Method  (https://github.com/mint-vu/backbone_vs_pooling/issues/1)
+* Size-Independent Sample Complexity of Neural Networks (https://arxiv.org/abs/1712.06541)
 ## Some useful references: 
 
 * [Deep Learning on Sets](https://fabianfuchsml.github.io/learningonsets/#fn:limitations_result)
