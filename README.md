@@ -9,6 +9,18 @@
 ### Learning based (Attention based)
 * PMA (Set Transformer)
 * [Trainable OT embedding](https://openreview.net/forum?id=ZK6vTvb84s)
+## Backbones
+### Point cloud classification
+* Identity
+* MLP
+* ISAB (induced set attention block)
+### Graph classification
+* GCN (graph convolutional network)
+* GAN (graph attention network)
+* GIN (graph isomorphism network)
+### Image classification
+* ViT (vision transformer)
+* CNNs (i.e. ResNet)
 ## On the complexity measures for Neural Nets
 * FLOPs and FLOPS (https://github.com/mint-vu/backbone_vs_pooling/issues/2, https://github.com/mint-vu/backbone_vs_pooling/issues/3)
 * [Rademacher, Golowich's Method, Barlett's Method](https://github.com/mint-vu/backbone_vs_pooling/issues/1)
