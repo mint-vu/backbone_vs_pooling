@@ -10,6 +10,7 @@
 * PMA (Set Transformer)
 * [Trainable OT embedding](https://openreview.net/forum?id=ZK6vTvb84s)
 ## Backbones
+[General overview](https://arxiv.org/pdf/2206.08016.pdf)
 ### Point cloud classification
 * Identity
 * MLP (see [PointNet](https://arxiv.org/pdf/1612.00593.pdf))
@@ -19,8 +20,10 @@
 * GAN (graph attention network)
 * GIN (graph isomorphism network)
 ### Image classification
-* ViT (vision transformer)
-* CNNs (i.e. ResNet)
+* ViT (vision transformer) (see [An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale](https://arxiv.org/pdf/2010.11929.pdf))
+* CNNs (i.e. ResNet) (see [Deep Residual Learning for Image Recognition](https://arxiv.org/pdf/1512.03385.pdf))
+### Object detection
+* [DetNet](https://arxiv.org/pdf/1804.06215.pdf)
 ## On the complexity measures for Neural Nets
 * FLOPs and FLOPS (https://github.com/mint-vu/backbone_vs_pooling/issues/2, https://github.com/mint-vu/backbone_vs_pooling/issues/3)
 * [Rademacher, Golowich's Method, Barlett's Method](https://github.com/mint-vu/backbone_vs_pooling/issues/1)
