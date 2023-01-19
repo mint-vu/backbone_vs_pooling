@@ -12,8 +12,8 @@
 ## Backbones
 ### Point cloud classification
 * Identity
-* MLP
-* ISAB (induced set attention block)
+* MLP (see [PointNet](https://arxiv.org/pdf/1612.00593.pdf))
+* ISAB (induced set attention block, see [Set Transformer](https://arxiv.org/pdf/1810.00825.pdf))
 ### Graph classification
 * GCN (graph convolutional network)
 * GAN (graph attention network)
