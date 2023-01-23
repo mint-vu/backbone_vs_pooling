@@ -13,12 +13,12 @@
 [General overview](https://arxiv.org/pdf/2206.08016.pdf)
 ### Point cloud classification
 * Identity
-* MLP (see [PointNet](https://arxiv.org/pdf/1612.00593.pdf))
+* MLP (see [PointNet](https://arxiv.org/pdf/1612.00593.pdf), [PointNet++](https://arxiv.org/pdf/1706.02413.pdf))
 * ISAB (induced set attention block, see [Set Transformer](https://arxiv.org/pdf/1810.00825.pdf))
 * Convolution-based: [DG-CNN](https://arxiv.org/pdf/1801.07829.pdf), [RS-CNN](https://arxiv.org/pdf/1904.07601.pdf), [InterpConv](https://arxiv.org/pdf/1908.04512.pdf)
 * PCT ([Point Cloud Transformer](https://arxiv.org/pdf/2012.09688.pdf))
 * [SimpleView](https://arxiv.org/pdf/2106.05304.pdf)
-* Others: [DensePoint](https://arxiv.org/pdf/1909.03669.pdf), [KCNet](https://arxiv.org/pdf/1712.06760.pdf), [KPConv](https://arxiv.org/pdf/1904.08889.pdf)
+* Others: [DensePoint](https://arxiv.org/pdf/1909.03669.pdf), [KCNet](https://arxiv.org/pdf/1712.06760.pdf), [KPConv](https://arxiv.org/pdf/1904.08889.pdf), [GSNet](https://arxiv.org/pdf/1912.10644.pdf)
 ### Graph classification
 * GCN (graph convolutional network)
 * GAN (graph attention network)
