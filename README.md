@@ -15,6 +15,9 @@
 * Identity
 * MLP (see [PointNet](https://arxiv.org/pdf/1612.00593.pdf))
 * ISAB (induced set attention block, see [Set Transformer](https://arxiv.org/pdf/1810.00825.pdf))
+* Convolution-based: [DG-CNN](https://arxiv.org/pdf/1801.07829.pdf) and [RS-CNN](https://arxiv.org/pdf/1904.07601.pdf)
+* PCT ([Point Cloud Transformer](https://arxiv.org/pdf/2012.09688.pdf))
+* [SimpleView](https://arxiv.org/pdf/2106.05304.pdf)
 ### Graph classification
 * GCN (graph convolutional network)
 * GAN (graph attention network)
