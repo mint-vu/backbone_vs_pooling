@@ -1,9 +1,16 @@
 from torch import nn
+
+import sys
+import os
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(BASE_DIR)
+
 from cov import CovPool
 from gap import GAP
 from gmean import GMean
 from max import MaxPool
 from nmax import NMax
+
 
 class Pooling(nn.Module):
     def __init__(self, pooling_type='GAP', d_in=1, batch_size=32, moment=2, top_k=2):

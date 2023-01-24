@@ -4,6 +4,13 @@ from torch.optim import Adam
 from torch.optim.lr_scheduler import StepLR
 from torch.utils.data import DataLoader
 
+import sys
+import os
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(BASE_DIR)
+sys.path.append(os.path.join(BASE_DIR, 'backbones'))
+sys.path.append(os.path.join(BASE_DIR, 'poolings'))
+
 from data_utils import ModelNet40
 from backbones.all_backbones import Backbone
 from poolings.all_poolings import Pooling
