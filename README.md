@@ -37,3 +37,9 @@
 
 * [Deep Learning on Sets](https://fabianfuchsml.github.io/learningonsets/#fn:limitations_result)
 
+## TO-DOs for 2/2:
+* Eva:
+* Abi:
+* Robert:
+* Ashkan: Janossy Pooling, PoinNet, PointNet++, RS-CNN, InterpConv, DensePoint, SimpleView, Transformer-based Models, SnapNet, SplatNet, SegCloud + Editing Interpolation's code
+
