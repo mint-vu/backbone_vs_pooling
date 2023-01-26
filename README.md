@@ -38,8 +38,8 @@
 * [Deep Learning on Sets](https://fabianfuchsml.github.io/learningonsets/#fn:limitations_result)
 
 ## TO-DOs for 2/2:
-* Eva:
-* Abi:
-* Robert:
+* Eva: Adding other poolings type
+* Abi: Editing code + sending papers to Robert
+* Robert: Backbone types.
 * Ashkan: Janossy Pooling, PoinNet, PointNet++, RS-CNN, InterpConv, DensePoint, SimpleView, Transformer-based Models, SnapNet, SplatNet, SegCloud + Editing Interpolation's code +Dataset overall search
 
