@@ -10,18 +10,15 @@ from mlp import MLP
 
 
 class Backbone(nn.Module):
-    def __init__(self, backbone_type='IDT', d_in=None, d_out=None, num_layers=1):
+    def __init__(self, backbone_type, d_in, d_out, **kwargs):
         super().__init__()
         self.d_in = d_in
         self.d_out = d_out
 
         if backbone_type == 'IDT':
             self.backbone = Identity()
-            self.d_out = d_in
         if backbone_type == 'MLP':
-            self.backbone = MLP(d_in=self.d_in, d_out=d_out,
-                                num_layers=num_layers)
-            self.d_out = d_out
+            self.backbone = MLP(d_in=self.d_in, d_out=self.d_out, **kwargs)
         else:
             raise ValueError(f'Backbone type {backbone_type} is not implemented!')
 

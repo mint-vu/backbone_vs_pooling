@@ -13,24 +13,25 @@ from nmax import NMax
 
 
 class Pooling(nn.Module):
-    def __init__(self, pooling_type='GAP', d_in=1, batch_size=32, moment=2, top_k=2):
+    def __init__(self, pooling_type, d_in, **kwargs):
         super().__init__()
+        self.d_in = d_in
 
         if pooling_type == 'COV':
-            self.num_outputs = d_in*(d_in+1)/2
-            self.pooling = CovPool(d_in=d_in, num_outputs=self.num_outputs, batch_size=batch_size)
+            self.d_out = d_in*(d_in+1)/2
+            self.pooling = CovPool(d_in=self.d_in, d_out=self.d_out, **kwargs)
         elif pooling_type == 'GAP':
-            self.num_outputs = d_in
+            self.d_out = d_in
             self.pooling = GAP()
         elif pooling_type == 'GMEAN':
-            self.num_outputs = d_in
-            self.pooling = GMean(moment=moment)
+            self.d_out = d_in
+            self.pooling = GMean(**kwargs)
         elif pooling_type == 'MAX':
-            self.num_outputs = d_in
+            self.d_out = d_in
             self.pooling = MaxPool()
         elif pooling_type == 'NMax':
-            self.num_outputs = d_in
-            self.pooling = NMax(top_k=top_k)
+            self.d_out = d_in
+            self.pooling = NMax(**kwargs)
         else:
             raise ValueError(f'Pooling type {pooling_type} is not implemented!')
 
