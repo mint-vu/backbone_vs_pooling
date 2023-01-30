@@ -6,6 +6,7 @@
 * [PointGuard](https://openaccess.thecvf.com/content/CVPR2021/papers/Liu_PointGuard_Provably_Robust_3D_Point_Cloud_Classification_CVPR_2021_paper.pdf)
 * [SpiderCNN](https://arxiv.org/pdf/1803.11527.pdf)
 * [PointCNN](https://arxiv.org/pdf/1801.07791.pdf)
+* [PCNN](https://dl.acm.org/doi/pdf/10.1145/3197517.3201301)
 * [PointConv](https://arxiv.org/abs/1811.07246)
 * [Pointwise Rotation-Invariant Network with Adaptive Sampling and 3D Spherical Voxel Convolution](https://arxiv.org/pdf/1811.09361.pdf)
 * [DensePoint](https://arxiv.org/pdf/1909.03669.pdf)
