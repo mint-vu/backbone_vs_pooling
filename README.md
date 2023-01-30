@@ -10,7 +10,7 @@
 * PMA (Set Transformer)
 * [Trainable OT embedding](https://openreview.net/forum?id=ZK6vTvb84s)
 ## Backbones
-[General overview](https://arxiv.org/pdf/2206.08016.pdf)
+### [Other potential backbones](backbones.md)
 ### Point cloud classification
 * Identity
 * MLP (see [PointNet](https://arxiv.org/pdf/1612.00593.pdf), [PointNet++](https://arxiv.org/pdf/1706.02413.pdf))
