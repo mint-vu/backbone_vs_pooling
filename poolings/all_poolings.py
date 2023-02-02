@@ -10,6 +10,7 @@ from gap import GAP
 from gmean import GMean
 from max import MaxPool
 from nmax import NMax
+from fspool import FSPool
 
 
 class Pooling(nn.Module):
@@ -32,6 +33,9 @@ class Pooling(nn.Module):
         elif pooling_type == 'NMax':
             self.d_out = d_in
             self.pooling = NMax(**kwargs)
+         elif pooling_type == 'FSPool':
+            self.d_out = n_pieces + 1
+            self.pooling = FSPool(**kwargs)
         else:
             raise ValueError(f'Pooling type {pooling_type} is not implemented!')
 
