@@ -11,6 +11,8 @@ from gmean import GMean
 from max import MaxPool
 from nmax import NMax
 from fspool import FSPool
+from FPSWE import FPSWE
+from LPSWE import LPSWE
 
 
 class Pooling(nn.Module):
@@ -33,9 +35,10 @@ class Pooling(nn.Module):
         elif pooling_type == 'NMax':
             self.d_out = d_in
             self.pooling = NMax(**kwargs)
-         elif pooling_type == 'FSPool':
-            self.d_out = n_pieces + 1
-            self.pooling = FSPool(**kwargs)
+        elif pooling_type == 'FPSWE':
+            self.d_out = num_projections
+        elif pooling_type == 'LPSWE':
+            self.d_out = num_projections
         else:
             raise ValueError(f'Pooling type {pooling_type} is not implemented!')
 
