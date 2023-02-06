@@ -4,6 +4,7 @@ import sys
 import os
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(BASE_DIR)
+sys.path.append(os.path.join(BASE_DIR, '..'))
 
 from cov import CovPool
 from gap import GAP
@@ -11,8 +12,9 @@ from gmean import GMean
 from max import MaxPool
 from nmax import NMax
 from fspool import FSPool
-from FPSWE import FPSWE
-from LPSWE import LPSWE
+from fpswe import FPSWE
+from lpswe import LPSWE
+from settransformer import PMA
 
 
 class Pooling(nn.Module):
@@ -35,10 +37,10 @@ class Pooling(nn.Module):
         elif pooling_type == 'NMax':
             self.d_out = d_in
             self.pooling = NMax(**kwargs)
-        elif pooling_type == 'FPSWE':
-            self.d_out = num_projections
-        elif pooling_type == 'LPSWE':
-            self.d_out = num_projections
+        # elif pooling_type == 'PMA':
+        #     # TODO: set d_out, should be (batch_size, num_seeds, d_in)
+        #     self.pooling = PMA(dim=self.d_in, **kwargs)
+        # TODO: Add FSPool, FPSWE, LPSWE
         else:
             raise ValueError(f'Pooling type {pooling_type} is not implemented!')
 

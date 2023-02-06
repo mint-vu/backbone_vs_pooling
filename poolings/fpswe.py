@@ -1,4 +1,5 @@
-# Source:https://github.com/navid-naderi/PSWE/blob/main/pswe.py
+# Source: https://github.com/navid-naderi/PSWE/blob/main/pswe.py
+
 import torch
 import torch.nn as nn
 
@@ -32,8 +33,8 @@ def interp1d(x,y,xnew,device):
     return ynew
     
 
-
-class LPSWE(nn.Module):
+    
+class FPSWE(nn.Module):
     def __init__(self, d_in, num_ref_points, num_projections):
         '''
         The PSWE module that produces fixed-dimensional permutation-invariant embeddings for input sets of arbitrary size.
@@ -48,10 +49,11 @@ class LPSWE(nn.Module):
         self.num_projections = num_projections
 
         uniform_ref = torch.linspace(-1, 1, num_ref_points).unsqueeze(1).repeat(1, num_projections)
-        self.reference = nn.Parameter(uniform_ref)
+        self.reference = uniform_ref
 
         # slicer
         self.theta = nn.utils.weight_norm(nn.Linear(d_in, num_projections, bias=False), dim=0)
+        self.theta.requires_grad=False
         if num_projections <= d_in:
             nn.init.eye_(self.theta.weight_v)
         else:
