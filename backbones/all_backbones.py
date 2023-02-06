@@ -19,11 +19,11 @@ class Backbone(nn.Module):
 
         if backbone_type == 'IDT':
             self.backbone = Identity()
-        if backbone_type == 'MLP':
+        elif backbone_type == 'MLP':
             self.backbone = MLP(d_in=self.d_in, d_out=self.d_out, **kwargs)
-        if backbone_type == 'SAB':
+        elif backbone_type == 'SAB':
             self.backbone == SAB(dim_in=self.din, dim_out=self.d_out, **kwargs)
-        if backbone_type == 'ISAB':
+        elif backbone_type == 'ISAB':
             self.backbone == ISAB(dim_in=self.din, dim_out=self.d_out, **kwargs)
         else:
             raise ValueError(f'Backbone type {backbone_type} is not implemented!')
