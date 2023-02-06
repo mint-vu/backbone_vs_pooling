@@ -15,27 +15,36 @@ from data_utils import ModelNet40
 from backbones.all_backbones import Backbone
 from poolings.all_poolings import Pooling
 
+import random
 import numpy as np
 from tqdm import tqdm
 from collections import defaultdict
 import os
 
-
+base_seed = 1234
 batch_size = 32
 num_epochs = 200
 lr = 1e-3
 num_classes = 40
+num_points_per_set = 1024
 
-
-def train_test(backbone_type, pooling_type, num_ref_points, num_projections, num_points_per_set, gpu_index):
+def train_test(backbone_type, pooling_type, backbone_args, pooling_args, gpu_index, experiment_id=0):
 
     device = f'cuda:{gpu_index}'
 
+    random_seed = base_seed + experiment_id
+    random.seed(random_seed)
+    torch.manual_seed(random_seed)
+    np.random.seed(random_seed)
+
     # create results directory if it doesn't exist
-    results_dir = 'directory/results/modelnet40/{}/{}_{}_{}/'.format(num_points_per_set, backbone_type, pooling_type, num_ref_points)
+    backbone_config = "_".join([str(v) for v in backbone_args.values()])
+    pooling_config = "_".join([str(v) for v in pooling_args.values()])
+    results_dir = f"./results/modelnet40/{backbone_type}_{pooling_type}/{backbone_config}/{pooling_config}"
     os.makedirs(results_dir, exist_ok=True)
 
-    print("params", backbone_type, pooling_type, num_ref_points,num_projections, num_points_per_set)
+    torch.save(backbone_args, os.path.join(results_dir, 'backbone_args.json'))
+    torch.save(pooling_args, os.path.join(results_dir, 'pooling_args.json'))
 
     # get the datasets
     phases = ['train', 'test']
@@ -53,9 +62,9 @@ def train_test(backbone_type, pooling_type, num_ref_points, num_projections, num
         loader[phase] = DataLoader(dataset[phase], batch_size=batch_size, shuffle=shuffle)
 
     # create the modules
-    backbone = Backbone(backbone_type=backbone_type, d_in=3)
-    pooling = Pooling(pooling=pooling_type, d_in=backbone.d_out, num_projections=num_projections, num_ref_points=num_ref_points)
-    classifier = nn.Linear(pooling.num_outputs, num_classes)
+    backbone = Backbone(backbone_type=backbone_type, **backbone_args)
+    pooling = Pooling(pooling=pooling_type, d_in=backbone.d_out, **pooling_args)
+    classifier = nn.Linear(pooling.d_out, num_classes) # TODO: Consider other classifiers?
 
     backbone.to(device)
     pooling.to(device)
@@ -64,10 +73,13 @@ def train_test(backbone_type, pooling_type, num_ref_points, num_projections, num
     # start training
     criterion = nn.CrossEntropyLoss()
 
-    params =  list(pooling.parameters()) + list(classifier.parameters())
-    
+    params = []
     if list(backbone.parameters()):
         params += list(backbone.parameters())
+    if list(pooling.parameters()):
+        params += list(pooling.parameters())
+    if list(classifier.parameters()):
+        params += list(classifier.parameters())
     
     optim = Adam(params, lr=lr)
     scheduler = StepLR(optim, step_size=50, gamma=0.5)
@@ -76,7 +88,6 @@ def train_test(backbone_type, pooling_type, num_ref_points, num_projections, num
     for epoch in tqdm(range(num_epochs)):
 
         for phase in phases:
-
             if phase == 'train':
                 backbone.train()
                 pooling.train()
@@ -90,7 +101,6 @@ def train_test(backbone_type, pooling_type, num_ref_points, num_projections, num
             acc_ = []
 
             for i, data in enumerate(loader[phase]):
-
                 # zero the parameter gradients
                 optim.zero_grad()
 
@@ -98,12 +108,9 @@ def train_test(backbone_type, pooling_type, num_ref_points, num_projections, num
 
                 x = x.to(device).to(torch.float)
                 y = y.to(device).squeeze()
-                #print(x.shape)
-                #print(y.shape)
 
                 # track history if only in train
                 with torch.set_grad_enabled(phase == 'train'):
-
                     # pass the sets through the backbone and pooling
                     z = backbone(x)
                     v = pooling(z)
@@ -111,14 +118,11 @@ def train_test(backbone_type, pooling_type, num_ref_points, num_projections, num
                     loss = criterion(logits, y)
 
                     acc = (1. * (torch.argmax(logits, dim=1) == y)).mean().item()
-                    #print(acc)
 
                     # backpropogation only in training phase
                     if phase == 'train':
                         # Backward pass
-                        print(True)
                         loss.backward(retain_graph=True)
-                        print(True)
                         # 1-step gradient descent
                         optim.step()
 
@@ -133,7 +137,6 @@ def train_test(backbone_type, pooling_type, num_ref_points, num_projections, num
         scheduler.step()
         
         print(epochMetrics)
-        # save intermediate results so far
-        torch.save(epochMetrics, results_dir + '{}.json'.format(num_ref_points))
+        torch.save(epochMetrics, os.path.join(results_dir, f"epoch_metrics_{random_seed}.json"))
 
     return epochMetrics
