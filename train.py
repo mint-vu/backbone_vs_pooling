@@ -20,6 +20,7 @@ import numpy as np
 from tqdm import tqdm
 from collections import defaultdict
 import os
+import json
 
 base_seed = 1234
 batch_size = 32
@@ -28,11 +29,11 @@ lr = 1e-3
 num_classes = 40
 num_points_per_set = 1024
 
-def train_test(backbone_type, pooling_type, backbone_args, pooling_args, gpu_index, experiment_id=0):
+def train_test(backbone_type, pooling_type, experiment_id=0, backbone_args={}, pooling_args={}, gpu_index=0):
 
     device = f'cuda:{gpu_index}'
 
-    random_seed = base_seed + experiment_id
+    random_seed = int(base_seed + experiment_id)
     random.seed(random_seed)
     torch.manual_seed(random_seed)
     np.random.seed(random_seed)
@@ -43,8 +44,10 @@ def train_test(backbone_type, pooling_type, backbone_args, pooling_args, gpu_ind
     results_dir = f"./results/modelnet40/{backbone_type}_{pooling_type}/{backbone_config}/{pooling_config}"
     os.makedirs(results_dir, exist_ok=True)
 
-    torch.save(backbone_args, os.path.join(results_dir, 'backbone_args.json'))
-    torch.save(pooling_args, os.path.join(results_dir, 'pooling_args.json'))
+    with open(os.path.join(results_dir, 'backbone_args.json'), 'w') as f:
+        json.dump(backbone_args, f, indent=2)
+    with open(os.path.join(results_dir, 'pooling_args.json'), 'w') as f:
+        json.dump(pooling_args, f, indent=2)
 
     # get the datasets
     phases = ['train', 'test']
@@ -63,7 +66,7 @@ def train_test(backbone_type, pooling_type, backbone_args, pooling_args, gpu_ind
 
     # create the modules
     backbone = Backbone(backbone_type=backbone_type, **backbone_args)
-    pooling = Pooling(pooling=pooling_type, d_in=backbone.d_out, **pooling_args)
+    pooling = Pooling(pooling_type=pooling_type, d_in=backbone.d_out, **pooling_args)
     classifier = nn.Linear(pooling.d_out, num_classes) # TODO: Consider other classifiers?
 
     backbone.to(device)
