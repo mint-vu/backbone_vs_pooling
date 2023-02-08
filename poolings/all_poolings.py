@@ -14,6 +14,7 @@ from nmax import NMax
 from fspool import FSPool
 from fpswe import FPSWE
 from lpswe import LPSWE
+from lpwe import OTKernel
 from settransformer import PMA
 
 
@@ -41,6 +42,8 @@ class Pooling(nn.Module):
         #     # TODO: set d_out, should be (batch_size, num_seeds, d_in)
         #     self.pooling = PMA(dim=self.d_in, **kwargs)
         # TODO: Add FSPool, FPSWE, LPSWE
+        elif pooling_type == 'LPWE':
+            self.pooling = OTKernel(in_dim=self.d_in, **kwargs)
         else:
             raise ValueError(f'Pooling type {pooling_type} is not implemented!')
 
