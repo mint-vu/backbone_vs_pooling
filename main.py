@@ -18,6 +18,14 @@ from backbones.all_backbones import BACKBONES
 from poolings.all_poolings import POOLINGS
 
 def validate(args):
+    if args.all:
+        args.backbones = BACKBONES
+        args.poolings = POOLINGS
+        return
+    else:
+        if not args.backbones or not args.poolings:
+            raise ValueError('Backbones and poolings must be specified')
+
     backbones = args.backbones
     poolings = args.poolings
 
@@ -68,8 +76,9 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('-b', '--backbones', nargs="*", type=str, help='List backbone types', required=True)
-    parser.add_argument('-p', '--poolings', nargs="*", type=str, help='List pooling types', required=True)
+    parser.add_argument('-a', '--all', action='store_true', help='Run all backbones and poolings', required=False)
+    parser.add_argument('-b', '--backbones', nargs="*", type=str, help='List backbone types', required=False)
+    parser.add_argument('-p', '--poolings', nargs="*", type=str, help='List pooling types', required=False)
     parser.add_argument('-e', '--num_experiments', type=int, default=1, help='Number of experiments', required=False)
     parser.add_argument('-g', '--num_gpus', type=int, default=torch.cuda.device_count(), help='Number of GPUs', required=False)
 
