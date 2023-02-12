@@ -140,6 +140,7 @@ def train_test(backbone_type, pooling_type, experiment_id=0, backbone_args={}, p
         scheduler.step()
         
         print(epochMetrics)
-        torch.save(epochMetrics, os.path.join(results_dir, f"epoch_metrics_{random_seed}.json"))
+        with open(os.path.join(results_dir, f"epoch_metrics_{random_seed}.json"), 'w') as f:
+            json.dump(epochMetrics, f, indent=2)
 
     return epochMetrics
