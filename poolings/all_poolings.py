@@ -18,7 +18,7 @@ from lpwe import OTKernel
 from attention_layers import PMA
 
 
-POOLINGS = ['cov', 'gap', 'gmean', 'max', 'nmax', 'lpwe']
+POOLINGS = ['cov', 'gap', 'gmean', 'max', 'nmax', 'pma']
 
 class Pooling(nn.Module):
     def __init__(self, pooling_type, d_in, **kwargs):
@@ -26,7 +26,7 @@ class Pooling(nn.Module):
         self.d_in = d_in
 
         if pooling_type == 'cov':
-            self.d_out = d_in*(d_in+1)/2
+            self.d_out = d_in*(d_in+1)//2
             self.pooling = CovPool(d_in=self.d_in, d_out=self.d_out, **kwargs)
         elif pooling_type == 'gap':
             self.d_out = d_in
@@ -40,7 +40,7 @@ class Pooling(nn.Module):
         elif pooling_type == 'nmax':
             self.d_out = d_in
             self.pooling = NMax(**kwargs)
-        elif pooling_type == 'PMA':
+        elif pooling_type == 'pma':
             self.d_out = d_in
             self.pooling = PMA(dim=self.d_in, **kwargs)
         # TODO: Add FSPool, FPSWE, LPSWE

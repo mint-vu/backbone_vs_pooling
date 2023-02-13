@@ -55,7 +55,7 @@ class ISAB(nn.Module):
         return self.mab1(X, H)
 
 class PMA(nn.Module):
-    def __init__(self, dim, num_heads, num_seeds, ln=False):
+    def __init__(self, dim, num_heads=1, num_seeds=1024, ln=False):
         super(PMA, self).__init__()
         self.S = nn.Parameter(torch.Tensor(1, num_seeds, dim))
         nn.init.xavier_uniform_(self.S)

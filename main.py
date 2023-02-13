@@ -39,6 +39,9 @@ def validate(args):
         if poolings[idx] not in POOLINGS:
             raise ValueError('Pooling not supported: ' + pooling)
 
+    for gpu in args.gpus:
+        if not 0 <= gpu < torch.cuda.device_count():
+            raise ValueError('GPU index out of range: ' + str(gpu))
 
 def main(args):
 
@@ -46,22 +49,23 @@ def main(args):
     poolings = args.poolings
     num_experiments = args.num_experiments
     experiment_ids = list(1e3 * (1 + np.arange(num_experiments)))
-    num_gpus = min(args.num_gpus, torch.cuda.device_count())
+    gpus = args.gpus
 
     data_utils.download()
 
     params = []
 
-    i = 0
+    gpu_idx = 0
     for backbone_type, pooling_type, experiment_id in itertools.product(backbones, poolings, experiment_ids):
-        # TODO: Configure method to get the backbone and pooling arguments
+        # NOTE: Using default configurations for testing, this should probably be changed later
         backbone_args = {
             "d_in": 3,
             "d_out": 3,
         }
         pooling_args = {}
-        params.append((backbone_type, pooling_type, experiment_id, backbone_args, pooling_args, i))
-        i = (i + 1) % num_gpus
+        
+        params.append((backbone_type, pooling_type, experiment_id, backbone_args, pooling_args, gpus[gpu_idx]))
+        gpu_idx = (gpu_idx + 1) % len(gpus)
 
     print('Total number of experimens:', len(params))
 
@@ -80,7 +84,7 @@ if __name__ == '__main__':
     parser.add_argument('-b', '--backbones', nargs="*", type=str, help='List backbone types', required=False)
     parser.add_argument('-p', '--poolings', nargs="*", type=str, help='List pooling types', required=False)
     parser.add_argument('-e', '--num_experiments', type=int, default=1, help='Number of experiments', required=False)
-    parser.add_argument('-g', '--num_gpus', type=int, default=torch.cuda.device_count(), help='Number of GPUs', required=False)
+    parser.add_argument('-g', '--gpus', type=int, nargs="*", default=list(range(torch.cuda.device_count())), help='GPUs to use', required=False)
 
     args = parser.parse_args()
     validate(args)
