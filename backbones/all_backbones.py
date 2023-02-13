@@ -8,7 +8,7 @@ sys.path.append(os.path.join(BASE_DIR, '..'))
 
 from identity import Identity
 from mlp import MLP
-from settransformer import SAB, ISAB
+from settransformer import SetTransformer
 
 
 BACKBONES = ['idt', 'mlp', 'sab', 'isab']
@@ -23,10 +23,8 @@ class Backbone(nn.Module):
             self.backbone = Identity()
         elif backbone_type == 'mlp':
             self.backbone = MLP(d_in=self.d_in, d_out=self.d_out, **kwargs)
-        elif backbone_type == 'sab':
-            self.backbone == SAB(dim_in=self.din, dim_out=self.d_out, **kwargs)
-        elif backbone_type == 'isab':
-            self.backbone == ISAB(dim_in=self.din, dim_out=self.d_out, **kwargs)
+        elif backbone_type in ['sab', 'isab']:
+            self.backbone = SetTransformer(type_=backbone_type, d_in=self.d_in, d_out=self.d_out, **kwargs)
         else:
             raise ValueError(f'Backbone type {backbone_type} is not implemented!')
 

@@ -15,7 +15,7 @@ from fspool import FSPool
 from fpswe import FPSWE
 from lpswe import LPSWE
 from lpwe import OTKernel
-from settransformer import PMA
+from attention_layers import PMA
 
 
 POOLINGS = ['cov', 'gap', 'gmean', 'max', 'nmax', 'lpwe']
@@ -40,9 +40,9 @@ class Pooling(nn.Module):
         elif pooling_type == 'nmax':
             self.d_out = d_in
             self.pooling = NMax(**kwargs)
-        # elif pooling_type == 'PMA':
-        #     # TODO: set d_out, should be (batch_size, num_seeds, d_in)
-        #     self.pooling = PMA(dim=self.d_in, **kwargs)
+        elif pooling_type == 'PMA':
+            self.d_out = d_in
+            self.pooling = PMA(dim=self.d_in, **kwargs)
         # TODO: Add FSPool, FPSWE, LPSWE
         elif pooling_type == 'lpwe':
             self.pooling = OTKernel(in_dim=self.d_in, **kwargs)
