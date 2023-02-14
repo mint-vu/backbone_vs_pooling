@@ -1,5 +1,5 @@
 import torch
-from torch.multiprocessing import Pool, Process
+from torch.multiprocessing import Pool
 import numpy as np
 import itertools
 import argparse

@@ -2,16 +2,15 @@ from torch import nn
 from attention_layers import SAB, ISAB
 
 class SetTransformer(nn.Module):
-    def __init__(self, d_in=None, d_out=None, type_="isab", num_layers=1, hidden_layer_size=256, num_heads=4, num_inds=16):
+    def __init__(self, d_in=None, d_out=None, type_="isab", num_hidden_layers=0, hidden_layer_size=256, num_heads=4, num_inds=16):
         super().__init__()
         
         layers = nn.ModuleList()
 
         layers.append(self.get_layer(type_, d_in, hidden_layer_size, num_heads, num_inds))
-        for i in range(num_layers):
+        for i in range(num_hidden_layers):
             layers.append(self.get_layer(type_, hidden_layer_size, hidden_layer_size, num_heads, num_inds))
         layers.append(self.get_layer(type_, hidden_layer_size, d_out, num_heads, num_inds))
-
 
         self.net = nn.Sequential(*layers)
 
@@ -24,4 +23,4 @@ class SetTransformer(nn.Module):
             raise ValueError(f'Layer type must be either "sab" or "isab", but got {type}!')
 
     def forward(self, x):
-        self.net(x)
+        return self.net(x)

@@ -24,6 +24,8 @@ class Backbone(nn.Module):
         elif backbone_type == 'mlp':
             self.backbone = MLP(d_in=self.d_in, d_out=self.d_out, **kwargs)
         elif backbone_type in ['sab', 'isab']:
+            # TODO: Override output dim for convenience, could be done better later
+            self.d_out = 256
             self.backbone = SetTransformer(type_=backbone_type, d_in=self.d_in, d_out=self.d_out, **kwargs)
         else:
             raise ValueError(f'Backbone type {backbone_type} is not implemented!')

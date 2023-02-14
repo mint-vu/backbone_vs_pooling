@@ -134,8 +134,8 @@ def train_test(backbone_type, pooling_type, experiment_id=0, backbone_args={}, p
                 acc_.append(acc)
                 
 
-            epochMetrics[phase, 'loss'].append(np.mean(loss_))
-            epochMetrics[phase, 'acc'].append(np.mean(acc_))
+            epochMetrics[f'{phase}_loss'].append(np.mean(loss_))
+            epochMetrics[f'{phase}_acc'].append(np.mean(acc_))
 
         scheduler.step()
         
