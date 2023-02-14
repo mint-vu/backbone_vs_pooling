@@ -19,4 +19,4 @@ class CovPool(nn.Module):
         return bcov  # (B, D, D)
 
     def forward(self, x):
-        return torch.unique(self.batch_cov(x) + self.l*torch.eye(self.d_in), dim=1).reshape(self.batch_size, self.d_out)
+        return torch.unique(self.batch_cov(x) + self.l*torch.eye(self.d_in, device=x.device), dim=1).reshape(self.batch_size, self.d_out)

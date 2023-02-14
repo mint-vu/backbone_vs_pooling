@@ -18,7 +18,7 @@ from lpwe import OTKernel
 from attention_layers import PMA
 
 
-POOLINGS = ['cov', 'gap', 'gmean', 'max', 'nmax', 'pma']
+POOLINGS = ['gap', 'gmean', 'max', 'nmax', 'pma']
 
 class Pooling(nn.Module):
     def __init__(self, pooling_type, d_in, **kwargs):

@@ -63,11 +63,11 @@ def main(args):
             "d_out": 3,
         }
         pooling_args = {}
-        
+
         params.append((backbone_type, pooling_type, experiment_id, backbone_args, pooling_args, gpus[gpu_idx]))
         gpu_idx = (gpu_idx + 1) % len(gpus)
 
-    print('Total number of experimens:', len(params))
+    print('Total number of experiments:', len(params))
 
     num_processes = min(10, len(params))
 
@@ -81,8 +81,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     parser.add_argument('-a', '--all', action='store_true', help='Run all backbones and poolings', required=False)
-    parser.add_argument('-b', '--backbones', nargs="*", type=str, help='List backbone types', required=False)
-    parser.add_argument('-p', '--poolings', nargs="*", type=str, help='List pooling types', required=False)
+    parser.add_argument('-b', '--backbones', nargs="*", type=str, default=['idt'], help='List backbone types', required=False)
+    parser.add_argument('-p', '--poolings', nargs="*", type=str, default=['max'], help='List pooling types', required=False)
     parser.add_argument('-e', '--num_experiments', type=int, default=1, help='Number of experiments', required=False)
     parser.add_argument('-g', '--gpus', type=int, nargs="*", default=list(range(torch.cuda.device_count())), help='GPUs to use', required=False)
 
