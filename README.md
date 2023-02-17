@@ -7,6 +7,8 @@
 * OT-based: SWE, WE
 ### Learning based (Attention based)
 * PMA (Set Transformer)
+* Learnable PSWE
+
 ### Pooling we need to implement
 * [recycled max](https://openaccess.thecvf.com/content/CVPR2022/html/Chen_Why_Discard_if_You_Can_Recycle_A_Recycling_Max_Pooling_CVPR_2022_paper.html)
 * Janossy pooling
