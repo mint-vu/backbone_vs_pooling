@@ -9,12 +9,11 @@
 * PMA (Set Transformer)
 * Learnable PSWE
 
-### Pooling we need to implement
+### To Be Implemented
 * [recycled max](https://openaccess.thecvf.com/content/CVPR2022/html/Chen_Why_Discard_if_You_Can_Recycle_A_Recycling_Max_Pooling_CVPR_2022_paper.html)
 * Janossy pooling
 * [Trainable OT embedding](https://openreview.net/forum?id=ZK6vTvb84s)
 ## Backbones
-### [Other potential backbones](backbones.md)
 ### Point cloud classification
 * Identity
 * MLP (see [PointNet](https://arxiv.org/pdf/1612.00593.pdf), [PointNet++](https://arxiv.org/pdf/1706.02413.pdf))
@@ -27,11 +26,8 @@
 * GCN (graph convolutional network)
 * GAN (graph attention network)
 * GIN (graph isomorphism network)
-### Image classification
-* ViT (vision transformer) (see [An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale](https://arxiv.org/pdf/2010.11929.pdf))
-* CNNs (i.e. ResNet) (see [Deep Residual Learning for Image Recognition](https://arxiv.org/pdf/1512.03385.pdf))
-### Object detection
-* [DetNet](https://arxiv.org/pdf/1804.06215.pdf)
+### [Other potential backbones](backbones.md)
+
 ## On the complexity measures for Neural Nets
 * FLOPs and FLOPS (https://github.com/mint-vu/backbone_vs_pooling/issues/2, https://github.com/mint-vu/backbone_vs_pooling/issues/3)
 * [Rademacher, Golowich's Method, Barlett's Method](https://github.com/mint-vu/backbone_vs_pooling/issues/1)
@@ -40,3 +36,8 @@
 ## Some useful references: 
 
 * [Deep Learning on Sets](https://fabianfuchsml.github.io/learningonsets/#fn:limitations_result)
+### Image classification
+* ViT (vision transformer) (see [An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale](https://arxiv.org/pdf/2010.11929.pdf))
+* CNNs (i.e. ResNet) (see [Deep Residual Learning for Image Recognition](https://arxiv.org/pdf/1512.03385.pdf))
+### Object detection
+* [DetNet](https://arxiv.org/pdf/1804.06215.pdf)
