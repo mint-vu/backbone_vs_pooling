@@ -43,13 +43,13 @@ class LPSWE(nn.Module):
             num_ref_points: Number of points in the reference set
             num_projections: Number of slices
         '''
-        super(PSWE, self).__init__()
+        super(LPSWE, self).__init__()
         self.d_in = d_in
         self.num_ref_points = num_ref_points
         self.num_projections = num_projections
 
         uniform_ref = torch.linspace(-1, 1, num_ref_points).unsqueeze(1).repeat(1, num_projections)
-        self.reference = nn.Parameter(uniform_ref)
+        self.reference = nn.Parameter(uniform_ref).to(device)
 
         # slicer
         self.theta = nn.utils.weight_norm(nn.Linear(d_in, num_projections, bias=False), dim=0)
