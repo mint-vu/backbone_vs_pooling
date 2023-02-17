@@ -1,13 +1,15 @@
 ## Pooling Methods
 ### Non-learning based
 * sum, mean, generalized mean
-* max, n-max pooling, [recycled max](https://openaccess.thecvf.com/content/CVPR2022/html/Chen_Why_Discard_if_You_Can_Recycle_A_Recycling_Max_Pooling_CVPR_2022_paper.html)
+* max, n-max pooling
 * covariance pooling
 * [FSpool](https://github.com/Cyanogenoid/fspool)
-* Janossy pooling
-* OT-based: SWE, WE, [Regularized optimal transport pooling (ROTP)](https://arxiv.org/pdf/2212.06339.pdf)
+* OT-based: SWE, WE
 ### Learning based (Attention based)
 * PMA (Set Transformer)
+### Pooling we need to implement
+* [recycled max](https://openaccess.thecvf.com/content/CVPR2022/html/Chen_Why_Discard_if_You_Can_Recycle_A_Recycling_Max_Pooling_CVPR_2022_paper.html)
+* Janossy pooling
 * [Trainable OT embedding](https://openreview.net/forum?id=ZK6vTvb84s)
 ## Backbones
 ### [Other potential backbones](backbones.md)
@@ -36,9 +38,3 @@
 ## Some useful references: 
 
 * [Deep Learning on Sets](https://fabianfuchsml.github.io/learningonsets/#fn:limitations_result)
-
-## TO-DOs for 2/9:
-* Eva: Poolings
-* Abi: FlOPs + MultiProcessing
-* Robert: Poolings
-* Ashkan: FLOPs + getting experiments ready to run + running them + allocating them to team (Table) + double check with Soheil
