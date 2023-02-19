@@ -33,7 +33,7 @@ def interp1d(x,y,xnew,device):
 
     
 class FPSWE(nn.Module):
-    def __init__(self, d_in, num_ref_points, num_projections):
+    def __init__(self, d_in, num_ref_points=1024, num_projections=1024):
         '''
         The PSWE module that produces fixed-dimensional permutation-invariant embeddings for input sets of arbitrary size.
         Inputs:
