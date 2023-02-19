@@ -2,7 +2,7 @@ from torch import nn
 
 
 class MLP(nn.Module):
-    def __init__(self, d_in=None, d_out=None, num_layers=1, hidden_layer_size=256, act_f=nn.ReLU()):
+    def __init__(self, d_in=None, d_out=None, num_layers=3, hidden_layer_size=256, act_f=nn.ReLU()):
         super().__init__()
         
         layers = nn.ModuleList()
