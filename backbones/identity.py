@@ -6,4 +6,5 @@ class Identity(nn.Module):
         super().__init__()
 
     def forward(self, x):
+        # Directly return x
         return x
