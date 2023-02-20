@@ -1,9 +1,6 @@
 import torch
 import torch.nn as nn
 
-def sel(x):
-
-    return torch.gather(x, 1, ind)
 
 def interp1d(x,y,xnew,device):
     
@@ -47,7 +44,8 @@ class FPSWE(nn.Module):
         self.num_projections = num_projections
 
         uniform_ref = torch.linspace(-1, 1, num_ref_points).unsqueeze(1).repeat(1, num_projections)
-        self.reference = uniform_ref.to(device)
+        # self.reference = uniform_ref.to(device)
+        self.reference = nn.Parameter(uniform_ref, requires_grad=False)
 
         # slicer
         self.theta = nn.utils.weight_norm(nn.Linear(d_in, num_projections, bias=False), dim=0)
@@ -90,7 +88,7 @@ class FPSWE(nn.Module):
             x = torch.linspace(0, 1, N + 2)[1:-1].unsqueeze(0).repeat(B * self.num_projections, 1).to(X.device)
             xnew = torch.linspace(0, 1, M + 2)[1:-1].unsqueeze(0).repeat(B * self.num_projections, 1).to(X.device)
             y = torch.transpose(Xslices_sorted, 1, 2).reshape(B * self.num_projections, -1)
-            Xslices_sorted_interpolated = torch.transpose(interp1d(x, y, xnew,device=device).view(B, self.num_projections, -1), 1, 2)
+            Xslices_sorted_interpolated = torch.transpose(interp1d(x, y, xnew,device=X.device).view(B, self.num_projections, -1), 1, 2)
             
         
         #print(Xslices_sorted_interpolated.shape)

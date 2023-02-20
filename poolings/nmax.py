@@ -8,4 +8,5 @@ class NMax(nn.Module):
         self.top_k = top_k
 
     def forward(self, x):
-        return torch.topk(x, self.top_k, dim=1)[0]
+        z = torch.topk(x, self.top_k, dim=1)[0]
+        return z.flatten(start_dim=1)

@@ -61,5 +61,12 @@ class PMA(nn.Module):
         nn.init.xavier_uniform_(self.S)
         self.mab = MAB(dim, dim, dim, num_heads, ln=ln)
 
+        # weights to reduce the output embedding dimensionality
+        self.weight = nn.Parameter(torch.zeros(num_seeds, dim))
+        nn.init.xavier_uniform_(self.weight)
+
     def forward(self, X):
-        return self.mab(self.S.repeat(X.size(0), 1, 1), X)
+        embeddings = self.mab(self.S.repeat(X.size(0), 1, 1), X)
+        w = self.weight.unsqueeze(0).repeat(embeddings.shape[0], 1, 1)
+        weighted_embeddings = (w * embeddings).sum(1)
+        return weighted_embeddings

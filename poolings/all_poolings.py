@@ -38,21 +38,21 @@ class Pooling(nn.Module):
             self.d_out = d_in
             self.pooling = MaxPool()
         elif pooling_type == 'nmax':
-            self.d_out = d_in
             self.pooling = NMax(**kwargs)
+            self.d_out = self.d_in * self.pooling.top_k
         elif pooling_type == 'pma':
             self.d_out = d_in
             self.pooling = PMA(dim=self.d_in, **kwargs)
         elif pooling_type == 'fpswe':
-            self.d_out=d_in
+            self.d_out=1024
             self.pooling = FPSWE(d_in=d_in, num_ref_points=1024, **kwargs)
         elif pooling_type == 'lpswe':
-            self.d_out=d_in
+            self.d_out=1024
             self.pooling = LPSWE(d_in=d_in, num_ref_points=1024, **kwargs)
             
         elif pooling_type == 'fspool':
             self.d_out=d_in
-            self.pooling = FSPool(in_channels=d_in, **kwargs)
+            self.pooling = FSPool(in_channels=d_in, n_pieces=1024, **kwargs)
 
         elif pooling_type == 'lpwe':
             self.d_out = d_in

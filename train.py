@@ -116,8 +116,12 @@ def train_test(backbone_type, pooling_type, experiment_id=0, backbone_args={}, p
                 with torch.set_grad_enabled(phase == 'train'):
                     # pass the sets through the backbone and pooling
                     z = backbone(x)
+                    # print(f"Backbone: {z.shape}")
                     v = pooling(z)
+                    # print(f"Pool output: {v.shape}")
                     logits = classifier(v)
+                    # print(f"Logits: {logits.shape}")
+                    # print(f"y: {y.shape}")
                     loss = criterion(logits, y)
 
                     acc = (1. * (torch.argmax(logits, dim=1) == y)).mean().item()
