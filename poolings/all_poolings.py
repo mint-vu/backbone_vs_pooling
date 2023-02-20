@@ -18,7 +18,7 @@ from lpwe import OTKernel
 from attention_layers import PMA
 
 
-POOLINGS = ['gap', 'gmean', 'max', 'nmax', 'pma','fpswe','lpswe','fspool']
+POOLINGS = ['cov', 'gap', 'gmean', 'max', 'nmax', 'pma','fpswe','lpswe','fspool']
 
 class Pooling(nn.Module):
     def __init__(self, pooling_type, d_in, **kwargs):
@@ -55,6 +55,8 @@ class Pooling(nn.Module):
             self.pooling = FSPool(in_channels=d_in, **kwargs)
 
         elif pooling_type == 'lpwe':
+            self.d_out = d_in
+            kwargs['out_size'] = self.d_out
             self.pooling = OTKernel(in_dim=self.d_in, **kwargs)
         else:
             raise ValueError(f'Pooling type {pooling_type} is not implemented!')

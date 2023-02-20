@@ -3,10 +3,10 @@ from torch import nn
 
 
 class CovPool(nn.Module):
-    def __init__(self, d_in, batch_size=32, lambda_=1e-2):
-        super(CovPool,self).__init__()
+    def __init__(self, d_in, d_out=None, batch_size=32, lambda_=1e-2):
+        super().__init__()
         self.d_in = d_in
-        self.d_out = int(d_in*(d_in+1)/2)
+        self.d_out = d_out if d_out is not None else int(d_in*(d_in+1)/2)
         self.batch_size = batch_size
         self.l = lambda_
 
@@ -19,6 +19,5 @@ class CovPool(nn.Module):
         return bcov  # (B, D, D)
 
     def forward(self, x):
-        c=torch.unique(torch.flatten(self.batch_cov(x) + self.l*torch.eye(self.d_in, device=x.device)))
-        
-        return c.reshape(self.batch_size,self.d_out)
+        z = (self.batch_cov(x) + self.l*torch.eye(self.d_in, device=x.device)).tril().flatten(start_dim=1)
+        return z[:, z.abs().sum(dim=0).bool()]
