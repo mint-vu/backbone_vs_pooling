@@ -1,12 +1,12 @@
 # Source: https://github.com/Snowdar/asv-subtools/blob/master/pytorch/libs/nnet/pooling.py
 
 import torch
-from torch import nn
+import torch.nn as nn
 import torch.nn.functional as F
 
 
 # Attention-based
-class AttentionAlphaComponent(torch.nn.Module):
+class AttentionAlphaComponent(nn.Module):
     """Compute the alpha with attention module.
             alpha = softmax(v'·f(w·x + b) + k) or softmax(v'·x + k)
     where f is relu here and bias could be lost.
@@ -37,7 +37,7 @@ class AttentionAlphaComponent(torch.nn.Module):
                 else:
                     # Different heads have different temperature.
                     # Use 1 + self.t**2 in forward to make sure temperature >= 1.
-                    self.t = torch.nn.Parameter(torch.zeros(1, num_head, 1, 1))
+                    self.t = nn.Parameter(torch.zeros(1, num_head, 1, 1))
 
         self.input_dim = input_dim
         self.num_head = num_head
@@ -75,18 +75,19 @@ class AttentionAlphaComponent(torch.nn.Module):
             # Add a relu-affine with affine_layers=2.
             self.relu_affine = True
             self.first_affine = TdnnAffine(input_dim, last_affine_input_dim, context=context, bias=bias, groups=first_groups)
-            self.relu = torch.nn.ReLU(inplace=True)
+            self.relu = nn.ReLU(inplace=True)
         else:
             raise ValueError("Expected 1 or 2 affine layers, but got {}.",format(affine_layers))
 
         self.last_affine = TdnnAffine(last_affine_input_dim, final_dim * num_head, context=context, bias=bias, groups=last_groups)
         # Dim=2 means to apply softmax in different frames-index (batch is a 3-dim tensor in this case).
-        self.softmax = torch.nn.Softmax(dim=2)
+        self.softmax = nn.Softmax(dim=2)
 
     def forward(self, inputs):
         """
         @inputs: a 3-dimensional tensor (a batch), including [samples-index, frames-dim-index, frames-index]
         """
+        inputs = inputs.permute((0, 2, 1))
         assert len(inputs.shape) == 3
         assert inputs.shape[1] == self.input_dim
 
@@ -108,7 +109,7 @@ class AttentionAlphaComponent(torch.nn.Module):
             return self.softmax(self.last_affine(x))
 
 
-class AttentiveStatisticsPooling(torch.nn.Module):
+class AttentiveStatisticsPooling(nn.Module):
     """ An attentive statistics pooling.
     Reference: Okabe, Koji, Takafumi Koshinaka, and Koichi Shinoda. 2018. "Attentive Statistics Pooling 
                for Deep Speaker Embedding." ArXiv Preprint ArXiv:1803.10963.
@@ -134,10 +135,12 @@ class AttentiveStatisticsPooling(torch.nn.Module):
         """
         @inputs: a 3-dimensional tensor (a batch), including [samples-index, frames-dim-index, frames-index]
         """
+        inputs = inputs.permute((0, 2, 1))
+
         assert len(inputs.shape) == 3
         assert inputs.shape[1] == self.input_dim
 
-        alpha = self.attention(inputs)
+        alpha = self.attention(inputs.permute((0, 2, 1)))
 
         # Weight avarage
         mean = torch.sum(alpha * inputs, dim=2, keepdim=True)
@@ -157,7 +160,7 @@ class AttentiveStatisticsPooling(torch.nn.Module):
         return self.output_dim
 
 
-class MultiHeadAttentionPooling(torch.nn.Module):
+class MultiHeadAttentionPooling(nn.Module):
     """Implement multi-head attention pooling based on AttentionAlphaComponent.
     Reference: Safari, Pooyan, and Javier Hernando. 2019. “Self Multi-Head Attention for Speaker 
                Recognition.” ArXiv Preprint ArXiv:1906.09890.
@@ -189,6 +192,7 @@ class MultiHeadAttentionPooling(torch.nn.Module):
         """
         @inputs: a 3-dimensional tensor (a batch), including [samples-index, frames-dim-index, frames-index]
         """
+        inputs = inputs.permute((0, 2, 1))
         assert len(inputs.shape) == 3
         assert inputs.shape[1] == self.input_dim
 
@@ -199,7 +203,7 @@ class MultiHeadAttentionPooling(torch.nn.Module):
         # When using the conv1d to implement the multi-multiple of multi-head, we can get
         # the weight distribution of multi-head: [h11, h12, h13, h21, h22, h23, ..., hn1, hn2, ...]
         # So, just reshape it to split different heads.
-        alpha = self.attention(inputs)
+        alpha = self.attention(inputs.permute((0, 2, 1)))
 
         # In sharing weight case, the shape of alpha is [batch, head, 1, frames] and [batch, head, splited-features, frames]
         # for another case.
@@ -227,7 +231,7 @@ class MultiHeadAttentionPooling(torch.nn.Module):
         return self.output_dim
 
 
-class GlobalMultiHeadAttentionPooling(torch.nn.Module):
+class GlobalMultiHeadAttentionPooling(nn.Module):
     """Implement global multi-head attention pooling based on AttentionAlphaComponent.
     Reference: Zhiming Wang, Kaisheng Yao, Xiaolong Li, Shuo Fang. "MULTI-RESOLUTION MULTI-HEAD 
                ATTENTION IN DEEP SPEAKER EMBEDDING." ICASSP, 2020.
@@ -264,6 +268,7 @@ class GlobalMultiHeadAttentionPooling(torch.nn.Module):
         """
         @inputs: a 3-dimensional tensor (a batch), including [samples-index, frames-dim-index, frames-index]
         """
+        inputs = inputs.permute((0, 2, 1))
         assert len(inputs.shape) == 3
         assert inputs.shape[1] == self.input_dim
 
@@ -274,7 +279,7 @@ class GlobalMultiHeadAttentionPooling(torch.nn.Module):
         # When using the conv1d to implement the multi-multiple of multi-head, we can get
         # the weight distribution of multi-head: [h11, h12, h13, h21, h22, h23, ..., hn1, hn2, ...]
         # So, just reshape it to split different heads.
-        alpha = self.attention(inputs)
+        alpha = self.attention(inputs.permute((0, 2, 1)))
 
         # In sharing weight case, the shape of alpha is [batch, head, 1, frames] and [batch, head, all-features, frames]
         # for another case.
@@ -302,7 +307,7 @@ class GlobalMultiHeadAttentionPooling(torch.nn.Module):
         return self.output_dim * self.num_head
 
 
-class MultiResolutionMultiHeadAttentionPooling(torch.nn.Module):
+class MultiResolutionMultiHeadAttentionPooling(nn.Module):
     """Implement multi-resolution global multi-head attention pooling based on AttentionAlphaComponent.
     Reference: Zhiming Wang, Kaisheng Yao, Xiaolong Li, Shuo Fang. "MULTI-RESOLUTION MULTI-HEAD 
                ATTENTION IN DEEP SPEAKER EMBEDDING." ICASSP, 2020.
@@ -338,6 +343,7 @@ class MultiResolutionMultiHeadAttentionPooling(torch.nn.Module):
         """
         @inputs: a 3-dimensional tensor (a batch), including [samples-index, frames-dim-index, frames-index]
         """
+        inputs = inputs.permute((0, 2, 1))
         assert len(inputs.shape) == 3
         assert inputs.shape[1] == self.input_dim
 
@@ -348,7 +354,7 @@ class MultiResolutionMultiHeadAttentionPooling(torch.nn.Module):
         # When using the conv1d to implement the multi-multiple of multi-head, we can get
         # the weight distribution of multi-head: [h11, h12, h13, h21, h22, h23, ..., hn1, hn2, ...]
         # So, just reshape it to split different heads.
-        alpha = self.attention(inputs)
+        alpha = self.attention(inputs.permute((0, 2, 1)))
 
         # In sharing weight case, the shape of alpha is [batch, head, 1, frames] and [batch, head, all-features, frames]
         # for another case.
@@ -376,7 +382,7 @@ class MultiResolutionMultiHeadAttentionPooling(torch.nn.Module):
         return self.output_dim * self.num_head
 
 # (Leo 2022-11-17)
-class MQMHASP(torch.nn.Module):
+class MQMHASP(nn.Module):
     """ 
      Reference:
         Miao Zhao, Yufeng Ma, and Yiwei Ding et al. "Multi-query multi-head attention pooling and Inter-topK penalty for speaker verification".
@@ -413,6 +419,7 @@ class MQMHASP(torch.nn.Module):
             x: input feature [B, F, T] 
             returns: pooling statiscs [B, F * qs, 1]
         """
+        x = x.permute((0, 2, 1))
         B, C ,T = x.shape
 
         if mask.size(2) == 0 :
@@ -466,21 +473,21 @@ class MQMHASP(torch.nn.Module):
 
         if affine_layers == 2:
             if norm_type == 'batch_norm':
-                norm = torch.nn.BatchNorm1d(hidden_size * num_head * num_q) 
+                norm = nn.BatchNorm1d(hidden_size * num_head * num_q) 
             elif norm_type == 'layer_norm':
-                norm =  torch.nn.GroupNorm(num_head * num_q, hidden_size * num_head * num_q)
+                norm =  nn.GroupNorm(num_head * num_q, hidden_size * num_head * num_q)
             else:
                 raise ValueError("Unsupport norm type:{}".format(norm_type))
-            att = torch.nn.Sequential(
-                torch.nn.Conv1d(idim, hidden_size * num_head * num_q, kernel_size=1, groups=num_head),
-                torch.nn.ReLU(),
+            att = nn.Sequential(
+                nn.Conv1d(idim, hidden_size * num_head * num_q, kernel_size=1, groups=num_head),
+                nn.ReLU(),
                 norm,              
-                torch.nn.Tanh(),
-                torch.nn.Conv1d(hidden_size * num_head * num_q, odim, kernel_size=1, groups=num_head * num_q)
+                nn.Tanh(),
+                nn.Conv1d(hidden_size * num_head * num_q, odim, kernel_size=1, groups=num_head * num_q)
             )
         elif affine_layers == 1 :
-            att = torch.nn.Sequential(
-                torch.nn.Conv1d(idim, odim, kernel_size=1, groups=num_head),
+            att = nn.Sequential(
+                nn.Conv1d(idim, odim, kernel_size=1, groups=num_head),
             )
         else:
             raise ValueError("Expected 1 or 2 affine layers, but got {}.".format(affine_layers))
@@ -490,7 +497,7 @@ class MQMHASP(torch.nn.Module):
         return '(stddev={stddev}, num_head={num_head}, num_q={num_q}, out_dim={out_dim}) '.format(**self.__dict__)
 
 # (Leo 2022-11-17)
-class MQMHASP_Linear(torch.nn.Module):
+class MQMHASP_Linear(nn.Module):
     """ Linear version of MQMHASP means computing querys one by one, which can save memory but cost more time. 
      Reference:
         Miao Zhao, Yufeng Ma, and Yiwei Ding et al. "Multi-query multi-head attention pooling and Inter-topK penalty for speaker verification".
@@ -510,7 +517,7 @@ class MQMHASP_Linear(torch.nn.Module):
         self.num_head = max(1, num_head)
         self.num_q = max(1, num_q)
         self.stddev=stddev
-        self.querys = torch.nn.ModuleList(
+        self.querys = nn.ModuleList(
             [
                 MQMHASP(in_dim, 
                         num_q = 1,
@@ -529,9 +536,10 @@ class MQMHASP_Linear(torch.nn.Module):
             x: input feature [B, F, T] 
             returns: pooling statiscs [B, F * qs, 1]
         """
+        x = x.permute((0, 2, 1))
         out = []
         for i, layer in enumerate(self.querys):
-            out.append(layer(x, mask))
+            out.append(layer(x.permute((0, 2, 1)), mask))
         return torch.cat(out, dim=1)
 
     def get_output_dim(self):
@@ -545,7 +553,7 @@ class MQMHASP_Linear(torch.nn.Module):
 
 
 ## Base ✿
-class TdnnAffine(torch.nn.Module):
+class TdnnAffine(nn.Module):
     """ An implemented tdnn affine component by conv1d
         y = splice(w * x, context) + b
     @input_dim: number of dims of frame <=> inputs channels of conv
@@ -587,14 +595,14 @@ class TdnnAffine(torch.nn.Module):
 
         kernel_size = (self.tot_context,)
 
-        self.weight = torch.nn.Parameter(torch.randn(output_dim, input_dim//groups, *kernel_size))
+        self.weight = nn.Parameter(torch.randn(output_dim, input_dim//groups, *kernel_size))
 
         # For jit compiling. 
         # 2021-07-08 Leo
-        self.bias = torch.nn.Parameter(torch.randn(output_dim)) if self.bool_bias else None
+        self.bias = nn.Parameter(torch.randn(output_dim)) if self.bool_bias else None
 
         # if self.bool_bias:
-        #     self.bias = torch.nn.Parameter(torch.randn(output_dim))
+        #     self.bias = nn.Parameter(torch.randn(output_dim))
         # else:
             # self.register_parameter('bias', None)
 
@@ -625,10 +633,10 @@ class TdnnAffine(torch.nn.Module):
 
     def init_weight(self):
         # Note, var should be small to avoid slow-shrinking
-        torch.nn.init.normal_(self.weight, 0., 0.01)
+        nn.init.normal_(self.weight, 0., 0.01)
 
         if self.bias is not None:
-            torch.nn.init.constant_(self.bias, 0.)
+            nn.init.constant_(self.bias, 0.)
 
 
     def forward(self, inputs:torch.Tensor)-> torch.Tensor:
