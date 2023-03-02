@@ -41,3 +41,11 @@
 * CNNs (i.e. ResNet) (see [Deep Residual Learning for Image Recognition](https://arxiv.org/pdf/1512.03385.pdf))
 ### Object detection
 * [DetNet](https://arxiv.org/pdf/1804.06215.pdf)
+
+### list of backbones:
+* PointNet, and PointNet++ (easy)
+* DGCNN (Robert)
+* PointView (easy)
+* CurveNet  (Eva)
+* SimpleView (Abi)
+* InterpConv (check for the code) (InterpConv)
