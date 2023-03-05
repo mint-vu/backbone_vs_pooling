@@ -147,4 +147,8 @@ def train_test(backbone_type, pooling_type, experiment_id=0, backbone_args={}, p
         with open(os.path.join(results_dir, f"epoch_metrics_{random_seed}.json"), 'w') as f:
             json.dump(epochMetrics, f, indent=2)
 
+        torch.save(backbone.state_dict(), os.path.join(results_dir, f"backbone_{random_seed}.pth"))
+        torch.save(pooling.state_dict(), os.path.join(results_dir, f"pooling_{random_seed}.pth"))
+        torch.save(classifier.state_dict(), os.path.join(results_dir, f"classifier_{random_seed}.pth"))
+
     return epochMetrics
