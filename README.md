@@ -47,5 +47,5 @@
 * DGCNN (Robert)
 * PointView (easy)
 * CurveNet  (Eva)
-* SimpleView (Abi)
+* <del>SimpleView (Abi)</del>
 * InterpConv (check for the code) (InterpConv)

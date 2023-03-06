@@ -9,9 +9,10 @@ sys.path.append(os.path.join(BASE_DIR, '..'))
 from identity import Identity
 from mlp import MLP
 from settransformer import SetTransformer
+from simpleview.simpleview import MVModel
 
 
-BACKBONES = ['idt', 'mlp', 'sab', 'isab']
+BACKBONES = ['idt', 'mlp', 'sab', 'isab', 'simpleview']
 
 class Backbone(nn.Module):
     def __init__(self, backbone_type, d_in, d_out, **kwargs):
@@ -27,6 +28,9 @@ class Backbone(nn.Module):
             # TODO: Override output dim for convenience, could be done better later
             self.d_out = 256
             self.backbone = SetTransformer(type_=backbone_type, d_in=self.d_in, d_out=self.d_out, **kwargs)
+        elif backbone_type == 'simpleview':
+            self.backbone = MVModel()
+            self.d_out = self.backbone.out_dim
         else:
             raise ValueError(f'Backbone type {backbone_type} is not implemented!')
 
