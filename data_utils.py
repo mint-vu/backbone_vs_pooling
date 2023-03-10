@@ -50,19 +50,28 @@ def rotate(pointcloud):
 
 class ModelNet40(Dataset):
     def __init__(self, num_points, partition='train'):
-        self.data, self.label = load_data(partition)
+        self.data, self.label = load_data('test' if partition=='test' else 'train')
+
         self.num_points = num_points
         self.partition = partition
 
+        size = self.data.shape[0]
+        if partition == "train":
+            self.data = self.data[:int(size * 0.9)]
+            self.label = self.label[:int(size * 0.9)]
+        elif partition == "valid":
+            self.data = self.data[int(size * 0.9):]
+            self.label = self.label[int(size * 0.9):]
+
     def __getitem__(self, item):
+        pointcloud = self.data[item]
+        np.random.shuffle(pointcloud)
+        pointcloud = pointcloud[:self.num_points]
+
         if self.partition == 'train':
-            pointcloud = self.data[item]
-            np.random.shuffle(pointcloud)
-            pointcloud = pointcloud[:self.num_points]
             pointcloud = translate_pointcloud(pointcloud)
             pointcloud = rotate(pointcloud)
-        else:
-            pointcloud = self.data[item][:self.num_points]
+
         label = self.label[item]
         return pointcloud, label
 

@@ -25,6 +25,7 @@ import json
 base_seed = 1234
 batch_size = 32
 num_epochs = 200
+early_stopping_patience = 7
 lr = 1e-3
 num_classes = 40
 num_points_per_set = 1024
@@ -50,7 +51,7 @@ def train_test(backbone_type, pooling_type, experiment_id=0, backbone_args={}, p
         json.dump(pooling_args, f, indent=2)
 
     # get the datasets
-    phases = ['train', 'test']
+    phases = ['train', 'valid', 'test']
     dataset = {}
     for phase in phases:
         dataset[phase] = ModelNet40(num_points_per_set, partition=phase)
@@ -67,7 +68,11 @@ def train_test(backbone_type, pooling_type, experiment_id=0, backbone_args={}, p
     # create the modules
     backbone = Backbone(backbone_type=backbone_type, **backbone_args)
     pooling = Pooling(pooling_type=pooling_type, d_in=backbone.d_out, **pooling_args)
-    classifier = nn.Linear(pooling.d_out, num_classes) # TODO: Consider other classifiers?
+    classifier = nn.Sequential(nn.Linear(pooling.d_out, 64),
+                               nn.ReLU(),
+                               nn.Linear(64, 64),
+                               nn.ReLU(),
+                               nn.Linear(64, num_classes))
 
     backbone.to(device)
     pooling.to(device)
@@ -88,6 +93,12 @@ def train_test(backbone_type, pooling_type, experiment_id=0, backbone_args={}, p
     scheduler = StepLR(optim, step_size=50, gamma=0.5)
 
     epochMetrics = defaultdict(list)
+    early_stopping_reached = False
+    early_stopping_counter = 0
+    save_results = True
+    final_results = {}
+
+
     for epoch in tqdm(range(num_epochs)):
 
         for phase in phases:
@@ -137,18 +148,46 @@ def train_test(backbone_type, pooling_type, experiment_id=0, backbone_args={}, p
                 loss_.append(loss.item())
                 acc_.append(acc)
                 
+            mean_loss = np.mean(loss_)
+            mean_acc = np.mean(acc_)
 
-            epochMetrics[f'{phase}_loss'].append(np.mean(loss_))
-            epochMetrics[f'{phase}_acc'].append(np.mean(acc_))
+            # Early stopping logic
+            if phase == "valid":
+                if epochMetrics['valid_loss'] and mean_loss > epochMetrics['valid_loss'][-1]:
+                    early_stopping_counter += 1
+                    save_results = False
+
+                    if early_stopping_counter >= early_stopping_patience:
+                        early_stopping_reached = True
+                    
+                    print(f"Early stopping counter now {early_stopping_counter}. Early stopping reached: {early_stopping_reached}.")
+                else:
+                    early_stopping_counter = 0
+                    save_results = True
+            elif phase == 'test':
+                if save_results:
+                    final_results = {
+                        'loss': mean_loss,
+                        'acc': mean_acc
+                    }
+
+            epochMetrics[f'{phase}_loss'].append(mean_loss)
+            epochMetrics[f'{phase}_acc'].append(mean_acc)
 
         scheduler.step()
         
         # print(epochMetrics)
         with open(os.path.join(results_dir, f"epoch_metrics_{random_seed}.json"), 'w') as f:
             json.dump(epochMetrics, f, indent=2)
+        
+        with open(os.path.join(results_dir, f"final_results_{random_seed}.json"), 'w') as f:
+            json.dump(final_results, f, indent=2)
 
         torch.save(backbone.state_dict(), os.path.join(results_dir, f"backbone_{random_seed}.pth"))
         torch.save(pooling.state_dict(), os.path.join(results_dir, f"pooling_{random_seed}.pth"))
         torch.save(classifier.state_dict(), os.path.join(results_dir, f"classifier_{random_seed}.pth"))
+
+        if early_stopping_reached:
+            break
 
     return epochMetrics
