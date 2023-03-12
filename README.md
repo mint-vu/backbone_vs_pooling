@@ -9,3 +9,4 @@
 * CurveNet  (Ashkan)
 * <del>SimpleView (Abi)</del>
 * <del>InterpConv (check for the code- code wasn't available)</del>
+* <del>GBNet (Ashkan)</del>
