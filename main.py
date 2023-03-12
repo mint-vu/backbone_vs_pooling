@@ -38,6 +38,11 @@ def validate(args):
         poolings[idx] = pooling.lower()
         if poolings[idx] not in POOLINGS:
             raise ValueError('Pooling not supported: ' + pooling)
+        
+    args.optimizer = args.optimizer.lower()
+
+    if args.optimizer not in ['adam', 'sgd']:
+        raise ValueError(f'Optimizer not supported: {args.optimizer}. Supported optimizers: adam, sgd.')
 
     for gpu in args.gpus:
         if not 0 <= gpu < torch.cuda.device_count():
@@ -64,7 +69,7 @@ def main(args):
         }
         pooling_args = {}
 
-        params.append((backbone_type, pooling_type, experiment_id, backbone_args, pooling_args, gpus[gpu_idx]))
+        params.append((backbone_type, pooling_type, experiment_id, args.optimizer, backbone_args, pooling_args, gpus[gpu_idx]))
         gpu_idx = (gpu_idx + 1) % len(gpus)
 
     print('Total number of experiments:', len(params))
@@ -84,6 +89,7 @@ if __name__ == '__main__':
     parser.add_argument('-b', '--backbones', nargs="*", type=str, default=['idt'], help='List backbone types', required=False)
     parser.add_argument('-p', '--poolings', nargs="*", type=str, default=['max'], help='List pooling types', required=False)
     parser.add_argument('-e', '--num_experiments', type=int, default=1, help='Number of experiments', required=False)
+    parser.add_argument('-o', '--optimizer', type=str, default='adam', help='Optimizer (either adam or sgd)', required=False)
     parser.add_argument('-g', '--gpus', type=int, nargs="*", default=list(range(torch.cuda.device_count())), help='GPUs to use', required=False)
 
     args = parser.parse_args()

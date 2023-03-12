@@ -1,6 +1,6 @@
 import torch
 from torch import nn
-from torch.optim import Adam
+from torch.optim import Adam, SGD
 from torch.optim.lr_scheduler import StepLR
 from torch.utils.data import DataLoader
 
@@ -30,7 +30,7 @@ lr = 1e-3
 num_classes = 40
 num_points_per_set = 1024
 
-def train_test(backbone_type, pooling_type, experiment_id=0, backbone_args={}, pooling_args={}, gpu_index=0):
+def train_test(backbone_type, pooling_type, experiment_id=0, optimizer='adam', backbone_args={}, pooling_args={}, gpu_index=0):
 
     device = f'cuda:{gpu_index}'
 
@@ -89,7 +89,9 @@ def train_test(backbone_type, pooling_type, experiment_id=0, backbone_args={}, p
     if list(classifier.parameters()):
         params += list(classifier.parameters())
     
-    optim = Adam(params, lr=lr)
+    optimizer = Adam if optimizer == 'adam' else SGD
+    print(optimizer)
+    optim = optimizer(params, lr=lr)
     scheduler = StepLR(optim, step_size=50, gamma=0.5)
 
     epochMetrics = defaultdict(list)
