@@ -1,51 +1,11 @@
-## Pooling Methods
-### Non-learning based
-* sum, mean, generalized mean
-* max, n-max pooling
-* covariance pooling
-* [FSpool](https://github.com/Cyanogenoid/fspool)
-* OT-based: SWE, WE
-### Learning based (Attention based)
-* PMA (Set Transformer)
-* Learnable PSWE
 
-### To Be Implemented
+## To Be Implemented (Poolings)
 * [recycled max](https://openaccess.thecvf.com/content/CVPR2022/html/Chen_Why_Discard_if_You_Can_Recycle_A_Recycling_Max_Pooling_CVPR_2022_paper.html)
 * Janossy pooling
-* [Trainable OT embedding](https://openreview.net/forum?id=ZK6vTvb84s)
-## Backbones
-### Point cloud classification
-* Identity
-* MLP (see [PointNet](https://arxiv.org/pdf/1612.00593.pdf), [PointNet++](https://arxiv.org/pdf/1706.02413.pdf))
-* ISAB (induced set attention block, see [Set Transformer](https://arxiv.org/pdf/1810.00825.pdf))
-* Convolution-based: [DG-CNN](https://arxiv.org/pdf/1801.07829.pdf), [RS-CNN](https://arxiv.org/pdf/1904.07601.pdf), [InterpConv](https://arxiv.org/pdf/1908.04512.pdf)
-* PCT ([Point Cloud Transformer](https://arxiv.org/pdf/2012.09688.pdf))
-* [SimpleView](https://arxiv.org/pdf/2106.05304.pdf)
-* Others: [DensePoint](https://arxiv.org/pdf/1909.03669.pdf), [KCNet](https://arxiv.org/pdf/1712.06760.pdf), [KPConv](https://arxiv.org/pdf/1904.08889.pdf), [GSNet](https://arxiv.org/pdf/1912.10644.pdf)
-### Graph classification
-* GCN (graph convolutional network)
-* GAN (graph attention network)
-* GIN (graph isomorphism network)
-### [Other potential backbones](backbones.md)
-
-## On the complexity measures for Neural Nets
-* FLOPs and FLOPS (https://github.com/mint-vu/backbone_vs_pooling/issues/2, https://github.com/mint-vu/backbone_vs_pooling/issues/3)
-* [Rademacher, Golowich's Method, Barlett's Method](https://github.com/mint-vu/backbone_vs_pooling/issues/1)
-* [Size-Independent Sample Complexity of Neural Networks](https://arxiv.org/abs/1712.06541) + [Their Talk](https://www.youtube.com/watch?v=3nhavy2sUEA)
-* [All-layer Margin](https://openreview.net/pdf?id=HJe_yR4Fwr)
-## Some useful references: 
-
-* [Deep Learning on Sets](https://fabianfuchsml.github.io/learningonsets/#fn:limitations_result)
-### Image classification
-* ViT (vision transformer) (see [An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale](https://arxiv.org/pdf/2010.11929.pdf))
-* CNNs (i.e. ResNet) (see [Deep Residual Learning for Image Recognition](https://arxiv.org/pdf/1512.03385.pdf))
-### Object detection
-* [DetNet](https://arxiv.org/pdf/1804.06215.pdf)
-
-### list of backbones:
-* PointNet, and PointNet++ (easy)
-* DGCNN (Robert)
+## To Be Implemented (Backbones)
+* <del>PointNet (easy)</del>
+* <del>DGCNN (Robert)</del>
 * PointView (easy)
 * CurveNet  (Eva)
 * <del>SimpleView (Abi)</del>
-* InterpConv (check for the code) (InterpConv)
+* <del>InterpConv (check for the code- code wasn't available)</del>
