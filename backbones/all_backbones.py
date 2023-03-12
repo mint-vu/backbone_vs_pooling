@@ -38,7 +38,7 @@ class Backbone(nn.Module):
             self.d_out = 1024
         elif backbone_type == 'pointnet':
             self.backbone = PointNet()
-            self.d_out = 512
+            self.d_out = 1024
         else:
             raise ValueError(f'Backbone type {backbone_type} is not implemented!')
 
