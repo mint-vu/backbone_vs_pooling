@@ -14,6 +14,7 @@ sys.path.append(os.path.join(BASE_DIR, 'poolings'))
 from data_utils import ModelNet40
 from backbones.all_backbones import Backbone
 from poolings.all_poolings import Pooling
+from classifier import Classifier
 
 import random
 import numpy as np
@@ -68,11 +69,7 @@ def train_test(backbone_type, pooling_type, experiment_id=0, optimizer='adam', b
     # create the modules
     backbone = Backbone(backbone_type=backbone_type, **backbone_args)
     pooling = Pooling(pooling_type=pooling_type, d_in=backbone.d_out, **pooling_args)
-    classifier = nn.Sequential(nn.Linear(pooling.d_out, 64),
-                               nn.ReLU(),
-                               nn.Linear(64, 64),
-                               nn.ReLU(),
-                               nn.Linear(64, num_classes))
+    classifier = Classifier(pooling.d_out,40)
 
     backbone.to(device)
     pooling.to(device)
@@ -129,9 +126,9 @@ def train_test(backbone_type, pooling_type, experiment_id=0, optimizer='adam', b
                 with torch.set_grad_enabled(phase == 'train'):
                     # pass the sets through the backbone and pooling
                     z = backbone(x)
-                    # print(f"Backbone: {z.shape}")
+                    print(f"Backbone: {z.shape}")
                     v = pooling(z)
-                    # print(f"Pool output: {v.shape}")
+                    print(f"Pool output: {v.shape}")
                     logits = classifier(v)
                     # print(f"Logits: {logits.shape}")
                     # print(f"y: {y.shape}")

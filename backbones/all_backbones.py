@@ -10,9 +10,11 @@ from identity import Identity
 from mlp import MLP
 from settransformer import SetTransformer
 from simpleview.simpleview import MVModel
+from dgcnn import DGCNN
+from pointnet import PointNet
 
 
-BACKBONES = ['idt', 'mlp', 'sab', 'isab', 'simpleview']
+BACKBONES = ['idt', 'mlp', 'sab', 'isab', 'simpleview','dgcnn', 'pointnet']
 
 class Backbone(nn.Module):
     def __init__(self, backbone_type, d_in, d_out, **kwargs):
@@ -31,6 +33,12 @@ class Backbone(nn.Module):
         elif backbone_type == 'simpleview':
             self.backbone = MVModel()
             self.d_out = self.backbone.out_dim
+        elif backbone_type == 'dgcnn':
+            self.backbone = DGCNN()
+            self.d_out = 1024
+        elif backbone_type == 'pointnet':
+            self.backbone = PointNet()
+            self.d_out = 512
         else:
             raise ValueError(f'Backbone type {backbone_type} is not implemented!')
 
