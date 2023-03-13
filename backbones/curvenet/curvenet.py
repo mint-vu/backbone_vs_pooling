@@ -1,5 +1,11 @@
 import torch.nn as nn
 import torch.nn.functional as F
+
+import sys
+import os
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(BASE_DIR)
+
 from curvenet_utils import *
 
 
