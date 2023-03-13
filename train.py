@@ -69,7 +69,7 @@ def train_test(backbone_type, pooling_type, experiment_id=0, optimizer='adam', b
     # create the modules
     backbone = Backbone(backbone_type=backbone_type, **backbone_args)
     pooling = Pooling(pooling_type=pooling_type, d_in=backbone.d_out, **pooling_args)
-    classifier = Classifier(pooling.d_out,40)
+    classifier = Classifier(pooling.d_out, 40)
 
     backbone.to(device)
     pooling.to(device)
@@ -87,7 +87,6 @@ def train_test(backbone_type, pooling_type, experiment_id=0, optimizer='adam', b
         params += list(classifier.parameters())
     
     optimizer = Adam if optimizer == 'adam' else SGD
-    print(optimizer)
     optim = optimizer(params, lr=lr)
     scheduler = StepLR(optim, step_size=50, gamma=0.5)
 
@@ -126,9 +125,9 @@ def train_test(backbone_type, pooling_type, experiment_id=0, optimizer='adam', b
                 with torch.set_grad_enabled(phase == 'train'):
                     # pass the sets through the backbone and pooling
                     z = backbone(x)
-                    #print(f"Backbone: {z.shape}")
+                    # print(f"Backbone: {z.shape}")
                     v = pooling(z)
-                    #print(f"Pool output: {v.shape}")
+                    # print(f"Pool output: {v.shape}")
                     logits = classifier(v)
                     # print(f"Logits: {logits.shape}")
                     # print(f"y: {y.shape}")
