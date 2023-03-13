@@ -42,6 +42,8 @@ class CurveNet(nn.Module):
             nn.ReLU(inplace=True))
 
     def forward(self, xyz):
+        xyz = xyz.permute(0, 2, 1) # Should be in format of (batch size, dim, num points)
+
         l0_points = self.lpfa(xyz, xyz)
 
         l1_xyz, l1_points = self.cic11(xyz, l0_points)
@@ -57,7 +59,5 @@ class CurveNet(nn.Module):
         l4_xyz, l4_points = self.cic42(l4_xyz, l4_points)
 
         x = self.conv0(l4_points)
-
-        print(x.shape)
  
         return x

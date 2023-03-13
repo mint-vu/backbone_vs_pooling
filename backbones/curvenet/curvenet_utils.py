@@ -181,7 +181,6 @@ class LPFA(nn.Module):
     def __init__(self, in_channel, out_channel, k, mlp_num=2, initial=False):
         super(LPFA, self).__init__()
         self.k = k
-        self.device = torch.device('cuda')
         self.initial = initial
 
         if not initial:
@@ -214,7 +213,7 @@ class LPFA(nn.Module):
         if idx is None:
             idx = knn(xyz, k=self.k)[:,:,:self.k]  # (batch_size, num_points, k)
 
-        idx_base = torch.arange(0, batch_size, device=self.device).view(-1, 1, 1) * num_points
+        idx_base = torch.arange(0, batch_size, device=x.device).view(-1, 1, 1) * num_points
         idx = idx + idx_base
         idx = idx.view(-1)
 

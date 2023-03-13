@@ -45,7 +45,7 @@ class Backbone(nn.Module):
             self.d_out = 1024
         elif backbone_type == 'curvenet':
             self.backbone = CurveNet()
-            self.d_out = 1024
+            self.d_out = 64
         else:
             raise ValueError(f'Backbone type {backbone_type} is not implemented!')
 
