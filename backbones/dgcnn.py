@@ -10,14 +10,8 @@
 """
 
 
-import os
-import sys
-import copy
-import math
-import numpy as np
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 
 
 def knn(x, k):
@@ -29,14 +23,12 @@ def knn(x, k):
     return idx
 
 
-def get_graph_feature(x, k=20, idx=None):
+def get_graph_feature(x, k=20, idx=None, device='cuda'):
     batch_size = x.size(0)
     num_points = x.size(2)
     #x = x.view(batch_size, -1, num_points)
     if idx is None:
         idx = knn(x, k=k)   # (batch_size, num_points, k)
-
-    device = torch.device('cuda')
 
     idx_base = torch.arange(0, batch_size, device=device).view(-1, 1, 1)*num_points
 
@@ -58,7 +50,7 @@ def get_graph_feature(x, k=20, idx=None):
 
 
 class DGCNN(nn.Module):
-    def __init__(self, output_channels=40):
+    def __init__(self):
         super(DGCNN, self).__init__()
         self.k = 20
         
@@ -85,23 +77,22 @@ class DGCNN(nn.Module):
                                    nn.LeakyReLU(negative_slope=0.2))
 
     def forward(self, x):
-
         batch_size = x.size(0)
-        x = get_graph_feature(x.view(batch_size,3,1024), k=self.k)
+        device = x.device
+
+        x = get_graph_feature(x.view(batch_size, 3, 1024), k=self.k, device=device)
         x = self.conv1(x)
         x1 = x.max(dim=-1, keepdim=False)[0]
 
-        x = get_graph_feature(x1, k=self.k)
+        x = get_graph_feature(x1, k=self.k, device=device)
         x = self.conv2(x)
         x2 = x.max(dim=-1, keepdim=False)[0]
-    
 
-
-        x = get_graph_feature(x2, k=self.k)
+        x = get_graph_feature(x2, k=self.k, device=device)
         x = self.conv3(x)
         x3 = x.max(dim=-1, keepdim=False)[0]
 
-        x = get_graph_feature(x3, k=self.k)
+        x = get_graph_feature(x3, k=self.k, device=device)
         x = self.conv4(x)
         x4 = x.max(dim=-1, keepdim=False)[0]
 

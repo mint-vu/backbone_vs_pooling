@@ -13,7 +13,7 @@ def knn(x, k):
     return idx
 
 
-def geometric_point_descriptor(x, k=3, idx=None):
+def geometric_point_descriptor(x, k=3, idx=None, device='cuda'):
     # x: B,3,N
     batch_size = x.size(0)
     num_points = x.size(2)
@@ -21,7 +21,6 @@ def geometric_point_descriptor(x, k=3, idx=None):
     x = x.view(batch_size, -1, num_points)
     if idx is None:
         idx = knn(x, k=k)  # (batch_size, num_points, k)
-    device = torch.device('cuda')
 
     idx_base = torch.arange(0, batch_size, device=device).view(-1, 1, 1)*num_points
     idx_base = idx_base.type(torch.cuda.LongTensor)
@@ -36,9 +35,9 @@ def geometric_point_descriptor(x, k=3, idx=None):
     neighbors = neighbors.view(batch_size, num_points, k, num_dims)
 
     neighbors = neighbors.permute(0, 3, 1, 2)  # B,C,N,k
-    neighbor_1st = torch.index_select(neighbors, dim=-1, index=torch.cuda.LongTensor([1])) # B,C,N,1
+    neighbor_1st = torch.index_select(neighbors, dim=-1, index=torch.cuda.LongTensor([1]).to(device)) # B,C,N,1
     neighbor_1st = torch.squeeze(neighbor_1st, -1)  # B,3,N
-    neighbor_2nd = torch.index_select(neighbors, dim=-1, index=torch.cuda.LongTensor([2])) # B,C,N,1
+    neighbor_2nd = torch.index_select(neighbors, dim=-1, index=torch.cuda.LongTensor([2]).to(device)) # B,C,N,1
     neighbor_2nd = torch.squeeze(neighbor_2nd, -1)  # B,3,N
 
     edge1 = neighbor_1st-org_x
@@ -51,13 +50,12 @@ def geometric_point_descriptor(x, k=3, idx=None):
 
     return new_pts
 
-def get_graph_feature(x, k=20, idx=None):
+def get_graph_feature(x, k=20, idx=None, device='cuda'):
     batch_size = x.size(0)
     num_points = x.size(2)
     x = x.view(batch_size, -1, num_points)
     if idx is None:
         idx = knn(x, k=k)   # (batch_size, num_points, k)
-    device = torch.device('cuda')
 
     idx_base = torch.arange(0, batch_size, device=device).view(-1, 1, 1)*num_points
     idx_base = idx_base.type(torch.cuda.LongTensor)
@@ -75,6 +73,8 @@ def get_graph_feature(x, k=20, idx=None):
     feature = torch.cat((feature-x, x), dim=3).permute(0, 3, 1, 2)
   
     return feature
+
+
 class CAA_Module(nn.Module):
     """ Channel-wise Affinity Attention module"""
     def __init__(self, in_dim):
@@ -152,9 +152,11 @@ class ABEM_Module(nn.Module):
         self.caa2 = CAA_Module(out_dim)
 
     def forward(self,x):
+        device = x.device
+
         # Prominent Feature Encoding
         x1 = x # input
-        input_edge = get_graph_feature(x, k=self.k)
+        input_edge = get_graph_feature(x, k=self.k, device=device)
         x = self.conv1(input_edge)
         x2 = x # EdgeConv for input
 
@@ -164,7 +166,7 @@ class ABEM_Module(nn.Module):
 
         delta = x3 - x1 # Error signal
 
-        x = get_graph_feature(delta, k=self.k)  # EdgeConv for Error signal
+        x = get_graph_feature(delta, k=self.k, device=device)  # EdgeConv for Error signal
         x = self.conv3(x)
         x4 = x
 
@@ -205,7 +207,7 @@ class GBNet(nn.Module):
         x=x.view(B,D,N)
 
         # Geometric Point Descriptor:
-        x = geometric_point_descriptor(x) # B,14,N
+        x = geometric_point_descriptor(x, device=x.device) # B,14,N
 
         # 1st Attentional Back-projection Edge Features Module (ABEM):
         x1, x1_local = self.abem1(x)

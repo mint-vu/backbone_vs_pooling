@@ -1,12 +1,10 @@
 # Source: https://github.com/WangYueFt/dgcnn/blob/master/pytorch/model.py
 
-import numpy as np
-import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
 class PointNet(nn.Module):
-    def __init__(self, output_channels=40):
+    def __init__(self):
         super(PointNet, self).__init__()
         
         self.conv1 = nn.Conv1d(3, 64, kernel_size=1, bias=False)
