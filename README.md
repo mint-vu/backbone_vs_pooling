@@ -6,7 +6,7 @@
 * <del>PointNet (easy)</del>
 * <del>DGCNN (Robert)</del>
 * PointView (easy)
-* CurveNet  (Ashkan)
+* <del>CurveNet  (Ashkan)</del>
 * <del>SimpleView (Abi)</del>
 * <del>InterpConv (check for the code- code wasn't available)</del>
 * <del>GBNet (Ashkan)</del>
