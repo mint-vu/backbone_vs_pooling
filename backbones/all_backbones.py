@@ -14,8 +14,10 @@ from dgcnn import DGCNN
 from pointnet import PointNet
 from gbnet import GBNet
 
+from curvenet.curvenet import CurveNet
 
-BACKBONES = ['idt', 'mlp', 'sab', 'isab', 'simpleview','dgcnn', 'pointnet','gbnet']
+
+BACKBONES = ['idt', 'mlp', 'sab', 'isab', 'simpleview','dgcnn', 'pointnet','gbnet', 'curvenet']
 
 class Backbone(nn.Module):
     def __init__(self, backbone_type, d_in, d_out, **kwargs):
@@ -42,6 +44,9 @@ class Backbone(nn.Module):
             self.d_out = 1024
         elif backbone_type == 'gbnet':
             self.backbone = GBNet()
+            self.d_out = 1024
+        elif backbone_type == 'curvenet':
+            self.backbone = CurveNet()
             self.d_out = 1024
         else:
             raise ValueError(f'Backbone type {backbone_type} is not implemented!')
