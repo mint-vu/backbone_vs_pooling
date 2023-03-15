@@ -7,12 +7,12 @@ class Classifier(nn.Module):
         self.din = d_in
         self.dout = d_out
 
-        self.linear1 = nn.Linear(self.din, 64)
-        self.linear2 = nn.Linear(64, 64)
-        self.linear3 = nn.Linear(64, self.dout)
+        self.linear1 = nn.Linear(self.din, 128)
+        self.linear2 = nn.Linear(128, 128)
+        self.linear3 = nn.Linear(128, self.dout)
         self.act = nn.ReLU()
         self.dp1 = nn.Dropout(0.5)
-        self.dp2 = nn.Dropout(0.5)
+        self.dp2 = nn.Dropout(0.3)
 
     def forward(self, x):
         x = self.act(self.linear1(x))

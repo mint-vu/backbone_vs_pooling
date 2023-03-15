@@ -57,11 +57,11 @@ class ModelNet40(Dataset):
 
         size = self.data.shape[0]
         if partition == "train":
-            self.data = self.data[:int(size * 0.9)]
-            self.label = self.label[:int(size * 0.9)]
+            self.data = self.data[:int(size * 0.99)]
+            self.label = self.label[:int(size * 0.99)]
         elif partition == "valid":
-            self.data = self.data[int(size * 0.9):]
-            self.label = self.label[int(size * 0.9):]
+            self.data = self.data[int(size * 0.99):]
+            self.label = self.label[int(size * 0.99):]
 
     def __getitem__(self, item):
         pointcloud = self.data[item]

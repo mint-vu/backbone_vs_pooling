@@ -22,11 +22,12 @@ from tqdm import tqdm
 from collections import defaultdict
 import os
 import json
+import time
 
 base_seed = 1234
 batch_size = 32
-num_epochs = 200
-early_stopping_patience = 7
+num_epochs = 1000
+early_stopping_patience = 10
 lr = 1e-3
 num_classes = 40
 num_points_per_set = 1024
@@ -111,8 +112,10 @@ def train_test(backbone_type, pooling_type, experiment_id=0, optimizer='adam', b
 
             loss_ = []
             acc_ = []
+            
 
             for i, data in enumerate(loader[phase]):
+
                 # zero the parameter gradients
                 optim.zero_grad()
 
@@ -171,6 +174,7 @@ def train_test(backbone_type, pooling_type, experiment_id=0, optimizer='adam', b
 
             epochMetrics[f'{phase}_loss'].append(mean_loss)
             epochMetrics[f'{phase}_acc'].append(mean_acc)
+            
 
         scheduler.step()
         
