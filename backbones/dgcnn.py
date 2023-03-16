@@ -80,24 +80,31 @@ class DGCNN(nn.Module):
         batch_size = x.size(0)
         device = x.device
 
-        x = get_graph_feature(x.view(batch_size, 3, 1024), k=self.k, device=device)
+        x = get_graph_feature(x.view(batch_size, 3, 256), k=self.k, device=device)
         x = self.conv1(x)
+       
         x1 = x.max(dim=-1, keepdim=False)[0]
-
+       
         x = get_graph_feature(x1, k=self.k, device=device)
         x = self.conv2(x)
+       
         x2 = x.max(dim=-1, keepdim=False)[0]
+       
 
         x = get_graph_feature(x2, k=self.k, device=device)
         x = self.conv3(x)
+     
         x3 = x.max(dim=-1, keepdim=False)[0]
+      
 
         x = get_graph_feature(x3, k=self.k, device=device)
         x = self.conv4(x)
+      
         x4 = x.max(dim=-1, keepdim=False)[0]
-
+      
         x = torch.cat((x1, x2, x3, x4), dim=1)
-
+        
         x = self.conv5(x)
-
-        return x
+        B,D,N = x.shape
+        
+        return x.view(B,N,D)

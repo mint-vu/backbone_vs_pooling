@@ -26,11 +26,11 @@ import time
 
 base_seed = 1234
 batch_size = 32
-num_epochs = 1000
+num_epochs = 500
 early_stopping_patience = 10
 lr = 1e-3
 num_classes = 40
-num_points_per_set = 1024
+num_points_per_set = 256
 
 def train_test(backbone_type, pooling_type, experiment_id=0, optimizer='adam', backbone_args={}, pooling_args={}, gpu_index=0):
 
@@ -112,6 +112,7 @@ def train_test(backbone_type, pooling_type, experiment_id=0, optimizer='adam', b
 
             loss_ = []
             acc_ = []
+            time_=[]
             
 
             for i, data in enumerate(loader[phase]):
@@ -141,16 +142,22 @@ def train_test(backbone_type, pooling_type, experiment_id=0, optimizer='adam', b
                     # backpropogation only in training phase
                     if phase == 'train':
                         # Backward pass
+                        tic=time.time()
                         loss.backward(retain_graph=True)
                         # 1-step gradient descent
                         optim.step()
+                        toc=time.time()
+                        time_.append(toc-tic)
+                        mean_time=np.mean(time_)
 
                 # save losses and accuracies
                 loss_.append(loss.item())
                 acc_.append(acc)
                 
+             
             mean_loss = np.mean(loss_)
             mean_acc = np.mean(acc_)
+            
 
             # Early stopping logic
             if phase == "valid":
@@ -174,6 +181,7 @@ def train_test(backbone_type, pooling_type, experiment_id=0, optimizer='adam', b
 
             epochMetrics[f'{phase}_loss'].append(mean_loss)
             epochMetrics[f'{phase}_acc'].append(mean_acc)
+            epochMetrics['backward_time'].append(np.mean(mean_time))
             
 
         scheduler.step()
