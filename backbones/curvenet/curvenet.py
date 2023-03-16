@@ -59,5 +59,7 @@ class CurveNet(nn.Module):
         l4_xyz, l4_points = self.cic42(l4_xyz, l4_points)
 
         x = self.conv0(l4_points)
- 
-        return x
+
+        B,D,N = x.shape
+        
+        return x.view(B,N,D)
