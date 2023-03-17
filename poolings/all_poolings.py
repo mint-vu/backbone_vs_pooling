@@ -16,9 +16,13 @@ from fpswe import FPSWE
 from lpswe import LPSWE
 from lpwe import OTKernel
 from attention_layers import PMA
+from attention import GlobalMultiHeadAttentionPooling as GMHAP
+from attention import MultiResolutionMultiHeadAttentionPooling as MMHA
+from janossy import Janossy
+from bipartite import ApproxRepSet as ARS
 
 
-POOLINGS = ['cov', 'gap', 'gmean', 'max', 'nmax', 'pma','fpswe','lpswe','fspool']
+POOLINGS = ['cov', 'gap', 'gmean', 'max', 'nmax', 'pma','fpswe','lpswe','lpwe','fspool','janossy','gmha','mmha','bpt']
 
 class Pooling(nn.Module):
     def __init__(self, pooling_type, d_in, **kwargs):
@@ -53,6 +57,18 @@ class Pooling(nn.Module):
         elif pooling_type == 'fspool':
             self.d_out=d_in
             self.pooling = FSPool(in_channels=d_in, n_pieces=1024, **kwargs)
+            
+        elif pooling_type == 'gmha':
+            self.pooling = GMHAP(d_in)
+            self.d_out=24
+
+        elif pooling_type == 'mmha':
+            self.pooling = MMHA(d_in)
+            self.d_out=24
+
+        elif pooling_type == 'bpt':
+            self.pooling = ARS(d_in,d_in,5)
+            self.d_out=self.pooling.n_hidden_sets
 
         elif pooling_type == 'lpwe':
             self.d_out = d_in

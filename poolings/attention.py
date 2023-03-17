@@ -26,6 +26,7 @@ class AttentionAlphaComponent(nn.Module):
             if split_input:
                 # Make sure fatures/planes with input_dim dims could be splited to num_head parts.
                 print("input_dim:",input_dim)
+                print(input_dim%num_head)
                 assert input_dim % num_head == 0
             if temperature:
                 if fixed:
@@ -299,7 +300,7 @@ class GlobalMultiHeadAttentionPooling(nn.Module):
             else:
                 var = torch.mean((inputs - mean)**2, dim=2, keepdim=True)
                 std = torch.sqrt(var.clamp(min=1.0e-10))
-            return torch.cat((mean, std), dim=1)
+            return torch.cat((mean, std), dim=1).squeeze()
         else :
             return mean
 
@@ -374,7 +375,7 @@ class MultiResolutionMultiHeadAttentionPooling(nn.Module):
             else:
                 var = torch.mean((inputs - mean)**2, dim=2, keepdim=True)
                 std = torch.sqrt(var.clamp(min=1.0e-10))
-            return torch.cat((mean, std), dim=1)
+            return torch.cat((mean, std), dim=1).squeeze()
         else :
             return mean
 
