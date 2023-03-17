@@ -71,9 +71,8 @@ class Pooling(nn.Module):
             self.d_out=self.pooling.n_hidden_sets
 
         elif pooling_type == 'lpwe':
-            self.d_out = d_in
-            kwargs['out_size'] = self.d_out
-            self.pooling = OTKernel(in_dim=self.d_in, **kwargs)
+            self.d_out = 9
+            self.pooling = OTKernel(in_dim=self.d_in,out_size=3, **kwargs)
         else:
             raise ValueError(f'Pooling type {pooling_type} is not implemented!')
 

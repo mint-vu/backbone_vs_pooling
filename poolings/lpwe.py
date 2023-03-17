@@ -107,7 +107,8 @@ class OTKernel(nn.Module):
             output = output.reshape(batch_size, out_size, out_size, -1)
         else:
             output = output.reshape(batch_size, self.out_size, -1)
-        return output
+        B,N,D = output.shape
+        return output.view(B,N*D)
 
     def unsup_train(self, input, wb=False, inplace=True, use_cuda=False):
         """K-meeans for learning parameters
