@@ -77,10 +77,10 @@ class DGCNN(nn.Module):
                                    nn.LeakyReLU(negative_slope=0.2))
 
     def forward(self, x):
-        batch_size = x.size(0)
         device = x.device
+        x = x.permute(0, 2, 1).contiguous()
 
-        x = get_graph_feature(x.view(batch_size, 3, 256), k=self.k, device=device)
+        x = get_graph_feature(x, k=self.k, device=device)
         x = self.conv1(x)
        
         x1 = x.max(dim=-1, keepdim=False)[0]
@@ -105,6 +105,5 @@ class DGCNN(nn.Module):
         x = torch.cat((x1, x2, x3, x4), dim=1)
         
         x = self.conv5(x)
-        B,D,N = x.shape
         
-        return x.view(B,N,D)
+        return x.permute(0, 2, 1).contiguous()

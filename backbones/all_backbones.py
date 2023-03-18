@@ -16,7 +16,7 @@ from gbnet import GBNet
 from curvenet.curvenet import CurveNet
 
 
-BACKBONES = ['idt', 'mlp', 'sab', 'isab', 'simpleview', 'dgcnn', 'pointnet', 'gbnet', 'curvenet']
+BACKBONES = ['idt', 'mlp', 'sab', 'isab', 'dgcnn', 'pointnet', 'curvenet'] # Disable 'simpleview' and 'gbnet' for now
 
 class Backbone(nn.Module):
     def __init__(self, backbone_type, d_in, d_out, **kwargs):

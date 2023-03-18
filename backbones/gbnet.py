@@ -202,9 +202,7 @@ class GBNet(nn.Module):
 
     def forward(self, x):
         # x: B,3,N
-        batch_size = x.size(0)
-        B,N,D = x.shape
-        x=x.view(B,D,N)
+        x = x.permute(0,2,1).contiguous() # B,3,N
 
         # Geometric Point Descriptor:
         x = geometric_point_descriptor(x, device=x.device) # B,14,N
@@ -226,4 +224,4 @@ class GBNet(nn.Module):
         x = self.conv(x) 
         x = self.caa(x) # B,1024,N
 
-        return x
+        return x.permute(0,2,1).contiguous() # B,N,1024

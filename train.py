@@ -30,7 +30,7 @@ num_epochs = 500
 early_stopping_patience = 10
 lr = 1e-3
 num_classes = 40
-num_points_per_set = 256
+num_points_per_set = 1024
 
 def train_test(backbone_type, pooling_type, experiment_id=0, optimizer='adam', backbone_args={}, pooling_args={}, gpu_index=0):
 
