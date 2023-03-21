@@ -129,9 +129,9 @@ def train_test(backbone_type, pooling_type, experiment_id=0, optimizer='adam', b
                 with torch.set_grad_enabled(phase == 'train'):
                     # pass the sets through the backbone and pooling
                     z = backbone(x)
-                    #print(f"Backbone: {z.shape}")
+                    # print(f"Backbone: {z.shape}")
                     v = pooling(z)
-                    #print(f"Pool output: {v.shape}")
+                    # print(f"Pool output: {v.shape}")
                     logits = classifier(v)
                     #print(f"Logits: {logits.shape}")
                     # print(f"y: {y.shape}")
@@ -161,6 +161,7 @@ def train_test(backbone_type, pooling_type, experiment_id=0, optimizer='adam', b
 
             # Early stopping logic
             if phase == "valid":
+                # TODO: potential bug here, should check mean_loss against best valid loss, not previous?
                 if epochMetrics['valid_loss'] and mean_loss > epochMetrics['valid_loss'][-1]:
                     early_stopping_counter += 1
                     save_results = False
