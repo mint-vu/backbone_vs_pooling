@@ -179,6 +179,10 @@ def train_test(backbone_type, pooling_type, experiment_id=0, optimizer='adam', b
                         'loss': mean_loss,
                         'acc': mean_acc
                     }
+                    torch.save(backbone.state_dict(), os.path.join(results_dir, f"backbone_{random_seed}.pth"))
+                    torch.save(pooling.state_dict(), os.path.join(results_dir, f"pooling_{random_seed}.pth"))
+                    torch.save(classifier.state_dict(), os.path.join(results_dir, f"classifier_{random_seed}.pth"))
+
 
             epochMetrics[f'{phase}_loss'].append(mean_loss)
             epochMetrics[f'{phase}_acc'].append(mean_acc)
@@ -193,10 +197,6 @@ def train_test(backbone_type, pooling_type, experiment_id=0, optimizer='adam', b
         
         with open(os.path.join(results_dir, f"final_results_{random_seed}.json"), 'w') as f:
             json.dump(final_results, f, indent=2)
-
-        torch.save(backbone.state_dict(), os.path.join(results_dir, f"backbone_{random_seed}.pth"))
-        torch.save(pooling.state_dict(), os.path.join(results_dir, f"pooling_{random_seed}.pth"))
-        torch.save(classifier.state_dict(), os.path.join(results_dir, f"classifier_{random_seed}.pth"))
 
         if early_stopping_reached:
             break
