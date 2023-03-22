@@ -11,7 +11,7 @@ sys.path.append(BASE_DIR)
 sys.path.append(os.path.join(BASE_DIR, 'backbones'))
 sys.path.append(os.path.join(BASE_DIR, 'poolings'))
 
-import data_utils
+from data_utils import modelnet, shapenet
 
 from train import train_test
 from backbones.all_backbones import BACKBONES
@@ -41,6 +41,9 @@ def validate(args):
         
     args.optimizer = args.optimizer.lower()
 
+    if args.dataset not in ['modelnet', 'shapenet']:
+        raise ValueError(f'Dataset not supported: {args.dataset}. Supported datasets: modelnet, shapenet.')
+
     if args.optimizer not in ['adam', 'sgd']:
         raise ValueError(f'Optimizer not supported: {args.optimizer}. Supported optimizers: adam, sgd.')
 
@@ -56,7 +59,10 @@ def main(args):
     experiment_ids = list(1e3 * (1 + np.arange(num_experiments)))
     gpus = args.gpus
 
-    data_utils.download()
+    if args.dataset == 'modelnet':
+        modelnet.download()
+    elif args.dataset == 'shapenet':
+        shapenet.download()
 
     params = []
 
@@ -69,7 +75,7 @@ def main(args):
         }
         pooling_args = {}
 
-        params.append((backbone_type, pooling_type, experiment_id, args.optimizer, backbone_args, pooling_args, gpus[gpu_idx]))
+        params.append((backbone_type, pooling_type, args.dataset, experiment_id, args.optimizer, backbone_args, pooling_args, gpus[gpu_idx]))
         gpu_idx = (gpu_idx + 1) % len(gpus)
 
     print('Total number of experiments:', len(params))
@@ -88,6 +94,7 @@ if __name__ == '__main__':
     parser.add_argument('-a', '--all', action='store_true', help='Run all backbones and poolings', required=False)
     parser.add_argument('-b', '--backbones', nargs="*", type=str, default=['idt'], help='List backbone types', required=False)
     parser.add_argument('-p', '--poolings', nargs="*", type=str, default=['max'], help='List pooling types', required=False)
+    parser.add_argument('-d', '--dataset', type=str, default='modelnet', help='Dataset to use', required=False)
     parser.add_argument('-e', '--num_experiments', type=int, default=1, help='Number of experiments', required=False)
     parser.add_argument('-o', '--optimizer', type=str, default='adam', help='Optimizer (either adam or sgd)', required=False)
     parser.add_argument('-g', '--gpus', type=int, nargs="*", default=list(range(torch.cuda.device_count())), help='GPUs to use', required=False)

@@ -1,6 +1,6 @@
 # Byte-compiled files
 __pycache__/
-data/
+data_utils/data/
 results/
 testing.ipynb
 .ipynb_checkpoints/

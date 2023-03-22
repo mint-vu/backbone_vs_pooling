@@ -11,7 +11,8 @@ sys.path.append(BASE_DIR)
 sys.path.append(os.path.join(BASE_DIR, 'backbones'))
 sys.path.append(os.path.join(BASE_DIR, 'poolings'))
 
-from data_utils import ModelNet40
+from data_utils.modelnet import ModelNet40
+from data_utils.shapenet import ShapeNetDataset
 from backbones.all_backbones import Backbone
 from poolings.all_poolings import Pooling
 from classifier import Classifier
@@ -27,12 +28,12 @@ import time
 base_seed = 1234
 batch_size = 32
 num_epochs = 500
-early_stopping_patience = 10
+early_stopping_patience = 7
 lr = 1e-3
 num_classes = 40
 num_points_per_set = 1024
 
-def train_test(backbone_type, pooling_type, experiment_id=0, optimizer='adam', backbone_args={}, pooling_args={}, gpu_index=0):
+def train_test(backbone_type, pooling_type, dataset='modelnet', experiment_id=0, optimizer='adam', backbone_args={}, pooling_args={}, gpu_index=0):
 
     device = f'cuda:{gpu_index}'
 
@@ -44,7 +45,7 @@ def train_test(backbone_type, pooling_type, experiment_id=0, optimizer='adam', b
     # create results directory if it doesn't exist
     backbone_config = "_".join([str(v) for v in backbone_args.values()])
     pooling_config = "_".join([str(v) for v in pooling_args.values()])
-    results_dir = f"./results/modelnet40/{backbone_type}_{pooling_type}/{backbone_config}/{pooling_config}"
+    results_dir = f"./results/{dataset}/{backbone_type}_{pooling_type}/{backbone_config}/{pooling_config}"
     os.makedirs(results_dir, exist_ok=True)
 
     with open(os.path.join(results_dir, 'backbone_args.json'), 'w') as f:
@@ -53,10 +54,11 @@ def train_test(backbone_type, pooling_type, experiment_id=0, optimizer='adam', b
         json.dump(pooling_args, f, indent=2)
 
     # get the datasets
+    base_dataset = ModelNet40 if dataset == 'modelnet' else ShapeNetDataset
     phases = ['train', 'valid', 'test']
     dataset = {}
     for phase in phases:
-        dataset[phase] = ModelNet40(num_points_per_set, partition=phase)
+        dataset[phase] = base_dataset(num_points_per_set, partition=phase)
 
     # create the dataloaders
     loader = {}
