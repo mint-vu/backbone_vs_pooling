@@ -60,11 +60,11 @@ class Pooling(nn.Module):
             
         elif pooling_type == 'gmha':
             self.pooling = GMHAP(d_in)
-            self.d_out=24
+            self.d_out=8*d_in
 
         elif pooling_type == 'mmha':
             self.pooling = MMHA(d_in)
-            self.d_out=24
+            self.d_out=8*d_in
 
         elif pooling_type == 'bpt':
             self.pooling = ARS(d_in,d_in,5)
