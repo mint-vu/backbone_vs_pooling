@@ -11,7 +11,7 @@ sys.path.append(BASE_DIR)
 sys.path.append(os.path.join(BASE_DIR, 'backbones'))
 sys.path.append(os.path.join(BASE_DIR, 'poolings'))
 
-from data_utils import modelnet, shapenet
+from data_utils import modelnet, shapenet, scanobjectnn
 
 from train import train_test
 from backbones.all_backbones import BACKBONES
@@ -41,8 +41,9 @@ def validate(args):
         
     args.optimizer = args.optimizer.lower()
 
-    if args.dataset not in ['modelnet', 'shapenet']:
-        raise ValueError(f'Dataset not supported: {args.dataset}. Supported datasets: modelnet, shapenet.')
+    args.dataset = args.dataset.lower()
+    if args.dataset not in ['modelnet', 'shapenet', 'scanobjectnn']:
+        raise ValueError(f'Dataset not supported: {args.dataset}. Supported datasets: modelnet, shapenet, scanobjectnn.')
 
     if args.optimizer not in ['adam', 'sgd']:
         raise ValueError(f'Optimizer not supported: {args.optimizer}. Supported optimizers: adam, sgd.')
@@ -63,6 +64,8 @@ def main(args):
         modelnet.download()
     elif args.dataset == 'shapenet':
         shapenet.download()
+    elif args.dataset == 'scanobjectnn':
+        scanobjectnn.download()
 
     params = []
 

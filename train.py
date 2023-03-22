@@ -13,6 +13,7 @@ sys.path.append(os.path.join(BASE_DIR, 'poolings'))
 
 from data_utils.modelnet import ModelNet40
 from data_utils.shapenet import ShapeNetDataset
+from data_utils.scanobjectnn import ScanObjectNN
 from backbones.all_backbones import Backbone
 from poolings.all_poolings import Pooling
 from classifier import Classifier
@@ -32,6 +33,12 @@ early_stopping_patience = 7
 lr = 1e-3
 num_classes = 40
 num_points_per_set = 1024
+
+DATASETS = {
+    'modelnet': ModelNet40,
+    'shapenet': ShapeNetDataset,
+    'scanobjectnn': ScanObjectNN
+}
 
 def train_test(backbone_type, pooling_type, dataset='modelnet', experiment_id=0, optimizer='adam', backbone_args={}, pooling_args={}, gpu_index=0):
 
@@ -54,7 +61,7 @@ def train_test(backbone_type, pooling_type, dataset='modelnet', experiment_id=0,
         json.dump(pooling_args, f, indent=2)
 
     # get the datasets
-    base_dataset = ModelNet40 if dataset == 'modelnet' else ShapeNetDataset
+    base_dataset = DATASETS[dataset]
     phases = ['train', 'valid', 'test']
     dataset = {}
     for phase in phases:

@@ -1,9 +1,16 @@
 # Source: 
+"""
+ScanObjectNN download: http://103.24.77.34/scanobjectnn/h5_files.zip
+"""
+
 import os
+import sys
 import glob
 import h5py
 import numpy as np
 from torch.utils.data import Dataset
+
+os.environ["HDF5_USE_FILE_LOCKING"] = "FALSE"
 
 
 def download():
@@ -11,47 +18,47 @@ def download():
     DATA_DIR = os.path.join(BASE_DIR, 'data')
     if not os.path.exists(DATA_DIR):
         os.mkdir(DATA_DIR)
-    if not os.path.exists(os.path.join(DATA_DIR, 'modelnet40_ply_hdf5_2048')):
-        www = 'https://shapenet.cs.stanford.edu/media/modelnet40_ply_hdf5_2048.zip'
+    if not os.path.exists(os.path.join(DATA_DIR, 'h5_files')):
+        # note that this link only contains the hardest perturbed variant (PB_T50_RS).
+        # for full versions, consider the following link.
+        www = 'https://web.northeastern.edu/smilelab/xuma/datasets/h5_files.zip'
+        # www = 'http://103.24.77.34/scanobjectnn/h5_files.zip'
         zipfile = os.path.basename(www)
-        os.system('wget %s --no-check-certificate; unzip %s' % (www, zipfile))
-        os.system('mv %s %s' % (zipfile[:-4], DATA_DIR.replace(' ', '\ ')))
+        os.system('wget --cipher \'DEFAULT:!DH\' %s  --no-check-certificate; unzip %s' % (www, zipfile))
+        os.system('mv %s %s' % (zipfile[:-4], DATA_DIR))
         os.system('rm %s' % (zipfile))
 
-def load_data(partition):
+
+def load_scanobjectnn_data(partition):
+    download()
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    DATA_DIR = os.path.join(BASE_DIR, 'data')
     all_data = []
     all_label = []
-    for h5_name in glob.glob(os.path.join(DATA_DIR, 'modelnet40_ply_hdf5_2048', 'ply_data_%s*.h5'%partition)):
-        f = h5py.File(h5_name)
-        data = f['data'][:].astype('float32')
-        label = f['label'][:].astype('int64')
-        f.close()
-        all_data.append(data)
-        all_label.append(label)
+
+    data_partition = 'training' if partition == 'train' else 'test'
+    h5_name = BASE_DIR + '/data/h5_files/main_split/' + data_partition + '_objectdataset_augmentedrot_scale75.h5'
+    f = h5py.File(h5_name, mode="r")
+    data = f['data'][:].astype('float32')
+    label = f['label'][:].astype('int64')
+    f.close()
+    all_data.append(data)
+    all_label.append(label)
     all_data = np.concatenate(all_data, axis=0)
     all_label = np.concatenate(all_label, axis=0)
     return all_data, all_label
 
+
 def translate_pointcloud(pointcloud):
-    xyz1 = np.random.uniform(low=2./3., high=3./2., size=[3])
+    xyz1 = np.random.uniform(low=2. / 3., high=3. / 2., size=[3])
     xyz2 = np.random.uniform(low=-0.2, high=0.2, size=[3])
 
     translated_pointcloud = np.add(np.multiply(pointcloud, xyz1), xyz2).astype('float32')
     return translated_pointcloud
 
-def rotate(pointcloud):
-    theta = np.pi * (np.random.uniform() - 0.5) / 3 # between -30deg and 30deg
-    rot = np.zeros((3, 3))
-    rot[:2, :2] = np.array([[np.cos(theta), -np.sin(theta)], [np.sin(theta), np.cos(theta)]])
-    rot[2, 2] = 1
-    pointcloud = np.matmul(pointcloud, rot)
-    return pointcloud
 
-class ModelNet40(Dataset):
+class ScanObjectNN(Dataset):
     def __init__(self, num_points, partition='train'):
-        self.data, self.label = load_data('test' if partition=='test' else 'train')
+        self.data, self.label = load_scanobjectnn_data(partition)
 
         self.num_points = num_points
         self.partition = partition
@@ -71,10 +78,19 @@ class ModelNet40(Dataset):
 
         if self.partition == 'train':
             pointcloud = translate_pointcloud(pointcloud)
-            pointcloud = rotate(pointcloud)
 
         label = self.label[item]
         return pointcloud, label
 
     def __len__(self):
         return self.data.shape[0]
+
+if __name__ == '__main__':
+
+    download()
+
+    train = ScanObjectNN(1024)
+    test = ScanObjectNN(1024, 'test')
+    for data, label in train:
+        print(data.shape)
+        print(label)
