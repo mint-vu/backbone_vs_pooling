@@ -103,6 +103,7 @@ def train_test(backbone_type, pooling_type, dataset='modelnet', experiment_id=0,
     epochMetrics = defaultdict(list)
     early_stopping_reached = False
     early_stopping_counter = 0
+    best_valid_loss = float('inf')
     save_results = True
     final_results = {}
 
@@ -170,11 +171,9 @@ def train_test(backbone_type, pooling_type, dataset='modelnet', experiment_id=0,
 
             # Early stopping logic
             if phase == "valid":
-                # TODO: potential bug here, should check mean_loss against best valid loss, not previous?
-                if epochMetrics['valid_loss'] and mean_loss > epochMetrics['valid_loss'][-1]:
+                if mean_loss >= best_valid_loss:
                     early_stopping_counter += 1
                     save_results = False
-
                     if early_stopping_counter >= early_stopping_patience:
                         early_stopping_reached = True
                     
@@ -182,6 +181,7 @@ def train_test(backbone_type, pooling_type, dataset='modelnet', experiment_id=0,
                 else:
                     early_stopping_counter = 0
                     save_results = True
+                    best_valid_loss = mean_loss
             elif phase == 'test':
                 if save_results:
                     final_results = {
