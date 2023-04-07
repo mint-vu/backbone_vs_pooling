@@ -16,6 +16,7 @@ from data_utils.shapenet import ShapeNetDataset
 from data_utils.scanobjectnn import ScanObjectNN
 from backbones.all_backbones import Backbone
 from poolings.all_poolings import Pooling
+from poolings.coupled_pooling import CoupledPooling
 from classifier import Classifier
 
 import random
@@ -49,6 +50,11 @@ def train_test(backbone_type, pooling_type, dataset='modelnet', experiment_id=0,
     torch.manual_seed(random_seed)
     np.random.seed(random_seed)
 
+    coupled = (type(pooling_type) == list)
+    if coupled:
+        poolings = pooling_type
+        pooling_type = '_'.join(poolings)   
+
     # create results directory if it doesn't exist
     backbone_config = "_".join([str(v) for v in backbone_args.values()])
     pooling_config = "_".join([str(v) for v in pooling_args.values()])
@@ -78,7 +84,10 @@ def train_test(backbone_type, pooling_type, dataset='modelnet', experiment_id=0,
 
     # create the modules
     backbone = Backbone(backbone_type=backbone_type, **backbone_args)
-    pooling = Pooling(pooling_type=pooling_type, d_in=backbone.d_out, **pooling_args)
+    if coupled:
+        pooling = CoupledPooling(poolings, backbone.d_out, pooling_args)
+    else:
+        pooling = Pooling(pooling_type=pooling_type, d_in=backbone.d_out, **pooling_args)
     classifier = Classifier(pooling.d_out, 40)
 
     backbone.to(device)
@@ -141,7 +150,7 @@ def train_test(backbone_type, pooling_type, dataset='modelnet', experiment_id=0,
                     z = backbone(x)
                     # print(f"Backbone: {z.shape}")
                     v = pooling(z)
-                    # print(f"Pool output: {v.shape}")
+                    print(f"Pool output: {v.shape}")
                     logits = classifier(v)
                     #print(f"Logits: {logits.shape}")
                     # print(f"y: {y.shape}")

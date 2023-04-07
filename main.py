@@ -56,6 +56,9 @@ def main(args):
 
     backbones = args.backbones
     poolings = args.poolings
+    if args.couple:
+        poolings = [poolings]
+
     num_experiments = args.num_experiments
     experiment_ids = list(1e3 * (1 + np.arange(num_experiments)))
     gpus = args.gpus
@@ -97,6 +100,7 @@ if __name__ == '__main__':
     parser.add_argument('-a', '--all', action='store_true', help='Run all backbones and poolings', required=False)
     parser.add_argument('-b', '--backbones', nargs="*", type=str, default=['idt'], help='List backbone types', required=False)
     parser.add_argument('-p', '--poolings', nargs="*", type=str, default=['max'], help='List pooling types', required=False)
+    parser.add_argument('-c', '--couple', action='store_true', default=False, help='Couple all specified poolings', required=False)
     parser.add_argument('-d', '--dataset', type=str, default='modelnet', help='Dataset to use', required=False)
     parser.add_argument('-e', '--num_experiments', type=int, default=1, help='Number of experiments', required=False)
     parser.add_argument('-o', '--optimizer', type=str, default='adam', help='Optimizer (either adam or sgd)', required=False)
