@@ -15,7 +15,7 @@ class CoupledPooling(nn.Module):
         self.d_in = d_in
         self.d_out = 0
 
-        self.poolings = []
+        self.poolings = nn.ModuleList()
         for pooling_type in pooling_types:
             if pooling_args is not None and pooling_type in pooling_args:
                 kwargs = pooling_args[pooling_type]

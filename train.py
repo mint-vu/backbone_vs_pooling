@@ -150,7 +150,7 @@ def train_test(backbone_type, pooling_type, dataset='modelnet', experiment_id=0,
                     z = backbone(x)
                     # print(f"Backbone: {z.shape}")
                     v = pooling(z)
-                    print(f"Pool output: {v.shape}")
+                    # print(f"Pool output: {v.shape}")
                     logits = classifier(v)
                     #print(f"Logits: {logits.shape}")
                     # print(f"y: {y.shape}")
