@@ -50,7 +50,7 @@ def train_test(backbone_type, pooling_type, dataset='modelnet', experiment_id=0,
     torch.manual_seed(random_seed)
     np.random.seed(random_seed)
 
-    coupled = (type(pooling_type) == list)
+    coupled = (type(pooling_type) in [list, tuple])
     if coupled:
         poolings = pooling_type
         pooling_type = '_'.join(poolings)   
