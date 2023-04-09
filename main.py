@@ -57,7 +57,7 @@ def main(args):
     backbones = args.backbones
     poolings = args.poolings
     if args.couple:
-        poolings = [poolings]
+        poolings = list(itertools.combinations(poolings, 2))
 
     num_experiments = args.num_experiments
     experiment_ids = list(1e3 * (1 + np.arange(num_experiments)))
@@ -84,6 +84,7 @@ def main(args):
         params.append((backbone_type, pooling_type, args.dataset, experiment_id, args.optimizer, backbone_args, pooling_args, gpus[gpu_idx]))
         gpu_idx = (gpu_idx + 1) % len(gpus)
 
+    print(params)
     print('Total number of experiments:', len(params))
 
     num_processes = min(10, len(params))
