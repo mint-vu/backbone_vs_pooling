@@ -25,6 +25,8 @@ def download():
 
 
 class ShapeNetDataset(data.Dataset):
+    num_classes = 16
+
     def __init__(self,
                  npoints=1024,
                  partition='train',
@@ -35,7 +37,7 @@ class ShapeNetDataset(data.Dataset):
         self.cat = {}
         self.data_augmentation = data_augmentation
         self.partition = partition
-        
+
         with open(self.catfile, 'r') as f:
             for line in f:
                 ls = line.strip().split()
@@ -98,3 +100,15 @@ class ShapeNetDataset(data.Dataset):
 
     def __len__(self):
         return len(self.datapath)
+
+if __name__ == '__main__':
+
+    download()
+
+    train = ShapeNetDataset(1024)
+    test = ShapeNetDataset(1024, 'test')
+    # for data, label in train:
+    #     print(data.shape)
+    #     print(label)
+
+    print(test.classes)

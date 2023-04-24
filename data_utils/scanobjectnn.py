@@ -57,6 +57,8 @@ def translate_pointcloud(pointcloud):
 
 
 class ScanObjectNN(Dataset):
+    num_classes = 15
+
     def __init__(self, num_points, partition='train'):
         self.data, self.label = load_scanobjectnn_data(partition)
 
@@ -91,6 +93,8 @@ if __name__ == '__main__':
 
     train = ScanObjectNN(1024)
     test = ScanObjectNN(1024, 'test')
-    for data, label in train:
-        print(data.shape)
-        print(label)
+    # for data, label in train:
+    #     print(data.shape)
+    #     print(label)
+
+    print(test.label)

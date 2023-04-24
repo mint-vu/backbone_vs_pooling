@@ -32,7 +32,6 @@ batch_size = 32
 num_epochs = 500
 early_stopping_patience = 7
 lr = 1e-3
-num_classes = 40
 num_points_per_set = 1024
 
 DATASETS = {
@@ -68,6 +67,9 @@ def train_test(backbone_type, pooling_type, dataset='modelnet', experiment_id=0,
 
     # get the datasets
     base_dataset = DATASETS[dataset]
+    num_classes = base_dataset.num_classes
+    print(f"Number of classes: {num_classes}")
+
     phases = ['train', 'valid', 'test']
     dataset = {}
     for phase in phases:
@@ -88,7 +90,7 @@ def train_test(backbone_type, pooling_type, dataset='modelnet', experiment_id=0,
         pooling = CoupledPooling(poolings, backbone.d_out, pooling_args)
     else:
         pooling = Pooling(pooling_type=pooling_type, d_in=backbone.d_out, **pooling_args)
-    classifier = Classifier(pooling.d_out, 40)
+    classifier = Classifier(pooling.d_out, num_classes)
 
     backbone.to(device)
     pooling.to(device)

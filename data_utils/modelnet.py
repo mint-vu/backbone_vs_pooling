@@ -50,6 +50,8 @@ def rotate(pointcloud):
     return pointcloud
 
 class ModelNet40(Dataset):
+    num_classes = 40
+
     def __init__(self, num_points, partition='train'):
         self.data, self.label = load_data('test' if partition=='test' else 'train')
 
