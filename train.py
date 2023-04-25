@@ -73,7 +73,7 @@ def train_test(backbone_type, pooling_type, dataset='modelnet', experiment_id=0,
     phases = ['train', 'valid', 'test']
     dataset = {}
     for phase in phases:
-        dataset[phase] = base_dataset(num_points_per_set, partition=phase)
+        dataset[phase] = base_dataset(num_points_per_set, partition=phase, seed=random_seed)
 
     # create the dataloaders
     loader = {}
