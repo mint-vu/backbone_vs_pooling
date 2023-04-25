@@ -2,7 +2,7 @@ from torch import nn
 from attention_layers import SAB, ISAB
 
 class SetTransformer(nn.Module):
-    def __init__(self, d_in=None, d_out=None, type_="isab", num_hidden_layers=4, hidden_layer_size=512, num_heads=4, num_inds=16):
+    def __init__(self, d_in=None, d_out=None, type_="isab", num_hidden_layers=1, hidden_layer_size=512, num_heads=4, num_inds=16):
         super().__init__()
         
         layers = nn.ModuleList()
