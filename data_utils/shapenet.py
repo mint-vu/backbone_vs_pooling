@@ -25,17 +25,16 @@ def download():
 
 
 class ShapeNetDataset(data.Dataset):
-    def __init__(self,
-                 npoints=1024,
-                 partition='train',
-                 data_augmentation=True):
+    num_classes = 16
+
+    def __init__(self, npoints=1024, partition='train', data_augmentation=True, seed=123):
         
         self.npoints = npoints
         self.catfile = os.path.join(ROOT, 'synsetoffset2category.txt')
         self.cat = {}
         self.data_augmentation = data_augmentation
         self.partition = partition
-        
+
         with open(self.catfile, 'r') as f:
             for line in f:
                 ls = line.strip().split()
@@ -65,10 +64,18 @@ class ShapeNetDataset(data.Dataset):
         self.datapath.sort()
 
         size = len(self.datapath)
+
+        if partition in ["train", "valid"]:
+            np.random.seed(seed)
+            idx = np.arange(size)
+            np.random.shuffle(idx)
+            train_idx = idx[:int(size * 0.99)]
+            valid_idx = idx[int(size * 0.99):]
+
         if partition == "train":
-            self.datapath = self.datapath[:int(size * 0.99)]
+            self.datapath = [self.datapath[i] for i in train_idx]
         elif partition == "valid":
-            self.datapath = self.datapath[int(size * 0.99):]
+            self.datapath = [self.datapath[i] for i in valid_idx]
 
         self.classes = dict(zip(sorted(self.cat), range(len(self.cat))))
 
@@ -98,3 +105,14 @@ class ShapeNetDataset(data.Dataset):
 
     def __len__(self):
         return len(self.datapath)
+
+if __name__ == '__main__':
+
+    download()
+
+    valid = ShapeNetDataset(1024, 'valid')
+    # for data, label in train:
+    #     print(data.shape)
+    #     print(label)
+
+    print([cls.item() for _, cls in valid])

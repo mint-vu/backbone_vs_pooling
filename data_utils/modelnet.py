@@ -50,19 +50,29 @@ def rotate(pointcloud):
     return pointcloud
 
 class ModelNet40(Dataset):
-    def __init__(self, num_points, partition='train'):
+    num_classes = 40
+
+    def __init__(self, num_points, partition='train', seed=123):
         self.data, self.label = load_data('test' if partition=='test' else 'train')
 
         self.num_points = num_points
         self.partition = partition
 
         size = self.data.shape[0]
+
+        if partition in ["train", "valid"]:
+            np.random.seed(seed)
+            idx = np.arange(size)
+            np.random.shuffle(idx)
+            train_idx = idx[:int(size * 0.99)]
+            valid_idx = idx[int(size * 0.99):]
+
         if partition == "train":
-            self.data = self.data[:int(size * 0.99)]
-            self.label = self.label[:int(size * 0.99)]
+            self.data = self.data[train_idx]
+            self.label = self.label[train_idx]
         elif partition == "valid":
-            self.data = self.data[int(size * 0.99):]
-            self.label = self.label[int(size * 0.99):]
+            self.data = self.data[valid_idx]
+            self.label = self.label[valid_idx]
 
     def __getitem__(self, item):
         pointcloud = self.data[item]
@@ -78,3 +88,12 @@ class ModelNet40(Dataset):
 
     def __len__(self):
         return self.data.shape[0]
+
+
+if __name__ == '__main__':
+
+    download()
+
+    valid = ModelNet40(1024, 'valid')
+
+    print(len(valid.label))
