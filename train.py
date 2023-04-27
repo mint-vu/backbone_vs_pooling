@@ -27,11 +27,11 @@ import os
 import json
 import time
 
-base_seed = 1234
+base_seed = 5555
 batch_size = 32
 num_epochs = 500
-early_stopping_patience = 7
-lr = 1e-3
+early_stopping_patience = 20
+lr = 8e-4
 num_points_per_set = 1024
 
 DATASETS = {
