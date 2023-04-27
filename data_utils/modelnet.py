@@ -51,6 +51,7 @@ def rotate(pointcloud):
 
 class ModelNet40(Dataset):
     num_classes = 40
+    classes = ['airplane', 'bathtub', 'bed', 'bench', 'bookshelf', 'bottle', 'bowl', 'car', 'chair', 'cone', 'cup', 'curtain', 'desk', 'door', 'dresser', 'flower_pot', 'glass_box', 'guitar', 'keyboard', 'lamp', 'laptop', 'mantel', 'monitor', 'night_stand', 'person', 'piano', 'plant', 'radio', 'range_hood', 'sink', 'sofa', 'stairs', 'stool', 'table', 'tent', 'toilet', 'tv_stand', 'vase', 'wardrobe', 'xbox']
 
     def __init__(self, num_points, partition='train', seed=123):
         self.data, self.label = load_data('test' if partition=='test' else 'train')
