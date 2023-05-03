@@ -22,7 +22,7 @@ from janossy import Janossy
 from bipartite import ApproxRepSet as ARS
 
 
-POOLINGS = ['cov', 'gap', 'gmean', 'max', 'nmax', 'pma','fpswe','lpswe','lpwe','fspool','janossy','gmha','mmha','bpt']
+POOLINGS = ['gap', 'gmean', 'max', 'nmax', 'pma','fpswe','lpswe','fspool','gmha','mmha','bpt'] # got rid of cov, janossy, lpwe
 
 class Pooling(nn.Module):
     def __init__(self, pooling_type, d_in, **kwargs):
