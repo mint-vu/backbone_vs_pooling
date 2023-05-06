@@ -40,7 +40,7 @@ DATASETS = {
     'scanobjectnn': ScanObjectNN
 }
 
-def train_test(backbone_type, pooling_type, dataset='modelnet', experiment_id=0, optimizer='adam', backbone_args={}, pooling_args={}, gpu_index=0):
+def train_test(backbone_type, pooling_type, dataset='modelnet', dataset_size=0.99, experiment_id=0, optimizer='adam', backbone_args={}, pooling_args={}, gpu_index=0):
 
     device = f'cuda:{gpu_index}'
 
@@ -73,7 +73,9 @@ def train_test(backbone_type, pooling_type, dataset='modelnet', experiment_id=0,
     phases = ['train', 'valid', 'test']
     dataset = {}
     for phase in phases:
-        dataset[phase] = base_dataset(num_points_per_set, partition=phase, seed=random_seed)
+        dataset[phase] = base_dataset(num_points_per_set, partition=phase, dataset_size=dataset_size, seed=random_seed)
+
+    print(f"Size of training dataset: {len(dataset['train'])}")
 
     # create the dataloaders
     loader = {}

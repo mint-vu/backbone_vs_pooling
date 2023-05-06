@@ -59,7 +59,7 @@ def translate_pointcloud(pointcloud):
 class ScanObjectNN(Dataset):
     num_classes = 15
 
-    def __init__(self, num_points, partition='train', seed=123):
+    def __init__(self, num_points, partition='train', dataset_size=0.99, seed=123):
         self.data, self.label = load_scanobjectnn_data(partition)
 
         self.num_points = num_points
@@ -71,7 +71,7 @@ class ScanObjectNN(Dataset):
             np.random.seed(seed)
             idx = np.arange(size)
             np.random.shuffle(idx)
-            train_idx = idx[:int(size * 0.99)]
+            train_idx = idx[:int(size * dataset_size)]
             valid_idx = idx[int(size * 0.99):]
 
         if partition == "train":
@@ -99,9 +99,8 @@ if __name__ == '__main__':
 
     download()
 
+    train = ScanObjectNN(1024, 'train', 0.01)
     valid = ScanObjectNN(1024, 'valid')
-    # for data, label in train:
-    #     print(data.shape)
-    #     print(label)
+    test = ScanObjectNN(1024, 'test')
 
-    print(valid.label)
+    print(len(train))

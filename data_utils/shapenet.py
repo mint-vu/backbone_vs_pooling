@@ -27,7 +27,7 @@ def download():
 class ShapeNetDataset(data.Dataset):
     num_classes = 16
 
-    def __init__(self, npoints=1024, partition='train', data_augmentation=True, seed=123):
+    def __init__(self, npoints=1024, partition='train', dataset_size=0.99, data_augmentation=True, seed=123):
         
         self.npoints = npoints
         self.catfile = os.path.join(ROOT, 'synsetoffset2category.txt')
@@ -69,7 +69,7 @@ class ShapeNetDataset(data.Dataset):
             np.random.seed(seed)
             idx = np.arange(size)
             np.random.shuffle(idx)
-            train_idx = idx[:int(size * 0.99)]
+            train_idx = idx[:int(size * dataset_size)]
             valid_idx = idx[int(size * 0.99):]
 
         if partition == "train":
@@ -110,9 +110,8 @@ if __name__ == '__main__':
 
     download()
 
+    train = ShapeNetDataset(1024, 'train', 0.01)
     valid = ShapeNetDataset(1024, 'valid')
-    # for data, label in train:
-    #     print(data.shape)
-    #     print(label)
+    test = ShapeNetDataset(1024, 'test')
 
-    print([cls.item() for _, cls in valid])
+    print(len(train))

@@ -45,6 +45,9 @@ def validate(args):
     if args.dataset not in ['modelnet', 'shapenet', 'scanobjectnn']:
         raise ValueError(f'Dataset not supported: {args.dataset}. Supported datasets: modelnet, shapenet, scanobjectnn.')
 
+    if not 0 < args.dataset_size <= 0.99:
+        raise ValueError(f'Dataset size must be between 0 and 0.99. Got {args.dataset_size}.')
+
     if args.optimizer not in ['adam', 'sgd']:
         raise ValueError(f'Optimizer not supported: {args.optimizer}. Supported optimizers: adam, sgd.')
 
@@ -90,7 +93,7 @@ def main(args):
 
         pooling_args = {}
 
-        params.append((backbone_type, pooling_type, args.dataset, experiment_id, args.optimizer, backbone_args, pooling_args, gpus[gpu_idx]))
+        params.append((backbone_type, pooling_type, args.dataset, args.dataset_size, experiment_id, args.optimizer, backbone_args, pooling_args, gpus[gpu_idx]))
         gpu_idx = (gpu_idx + 1) % len(gpus)
 
     print(params)
@@ -115,6 +118,8 @@ if __name__ == '__main__':
     parser.add_argument('-e', '--num_experiments', type=int, default=1, help='Number of experiments', required=False)
     parser.add_argument('-o', '--optimizer', type=str, default='adam', help='Optimizer (either adam or sgd)', required=False)
     parser.add_argument('-g', '--gpus', type=int, nargs="*", default=list(range(torch.cuda.device_count())), help='GPUs to use', required=False)
+
+    parser.add_argument('-ds', '--dataset_size', type=float, default=0.99, help='Fraction of dataset to use', required=False)
 
     parser.add_argument('-l', '--num_layers', type=int, default=2, help='Number of layers for MLP and SAB backbones', required=False)
     parser.add_argument('-w', '--width', type=int, default=512, help='Width of MLP and SAB backbones', required=False)
