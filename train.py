@@ -57,7 +57,7 @@ def train_test(backbone_type, pooling_type, dataset='modelnet', dataset_size=0.9
     # create results directory if it doesn't exist
     backbone_config = "_".join([str(v) for v in backbone_args.values()])
     pooling_config = "_".join([str(v) for v in pooling_args.values()])
-    results_dir = f"./results/{dataset}/{backbone_type}_{pooling_type}/{backbone_config}/{pooling_config}"
+    results_dir = f"./results/{dataset}-{dataset_size}/{backbone_type}_{pooling_type}/{backbone_config}/{pooling_config}"
     os.makedirs(results_dir, exist_ok=True)
 
     with open(os.path.join(results_dir, 'backbone_args.json'), 'w') as f:
