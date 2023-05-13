@@ -9,14 +9,12 @@ sys.path.append(os.path.join(BASE_DIR, '..'))
 from identity import Identity
 from mlp import MLP
 from settransformer import SetTransformer
-from simpleview.simpleview import MVModel
 from dgcnn import DGCNN
 from pointnet import PointNet
-from gbnet import GBNet
 from curvenet.curvenet import CurveNet
 
 
-BACKBONES = ['idt', 'mlp', 'sab', 'isab', 'dgcnn', 'pointnet', 'curvenet'] # Disable 'simpleview' and 'gbnet' for now
+BACKBONES = ['idt', 'mlp', 'sab', 'isab', 'dgcnn', 'pointnet', 'curvenet']
 
 class Backbone(nn.Module):
     def __init__(self, backbone_type, d_in, d_out, **kwargs):
@@ -31,17 +29,11 @@ class Backbone(nn.Module):
         elif backbone_type in ['sab', 'isab']:
             self.d_out = 256
             self.backbone = SetTransformer(type_=backbone_type, d_in=self.d_in, d_out=self.d_out, **kwargs)
-        elif backbone_type == 'simpleview':
-            self.backbone = MVModel()
-            self.d_out = self.backbone.out_dim
         elif backbone_type == 'dgcnn':
             self.backbone = DGCNN()
             self.d_out = 1024
         elif backbone_type == 'pointnet':
             self.backbone = PointNet()
-            self.d_out = 1024
-        elif backbone_type == 'gbnet':
-            self.backbone = GBNet()
             self.d_out = 1024
         elif backbone_type == 'curvenet':
             self.backbone = CurveNet()
