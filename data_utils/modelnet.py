@@ -1,4 +1,5 @@
-# Source: 
+# Source: https://github.com/Strawberry-Eat-Mango/PCT_Pytorch/blob/main/data.py
+
 import os
 import glob
 import h5py

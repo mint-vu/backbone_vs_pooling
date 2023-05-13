@@ -1,3 +1,5 @@
+# Source: https://github.com/navid-naderi/PSWE/blob/main/pswe.py
+
 import torch
 import torch.nn as nn
 
@@ -28,7 +30,6 @@ def interp1d(x,y,xnew,device):
     return ynew
     
 
-    
 class FPSWE(nn.Module):
     def __init__(self, d_in, num_ref_points=1024, num_projections=1024):
         '''

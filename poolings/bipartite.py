@@ -1,3 +1,4 @@
+# Source: https://github.com/giannisnik/repset/blob/master/approxrepset/models.py
 
 import torch
 import torch.nn as nn
