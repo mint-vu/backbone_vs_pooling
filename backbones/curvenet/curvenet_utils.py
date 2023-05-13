@@ -1,3 +1,5 @@
+# Source: https://github.com/tiangexiang/CurveNet/blob/main/core/models/curvenet_util.py
+
 """
 @Author: Yue Wang
 @Contact: yuewangx@mit.edu

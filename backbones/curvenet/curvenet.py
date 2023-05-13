@@ -1,3 +1,5 @@
+# Source: https://github.com/tiangexiang/CurveNet/blob/main/core/models/curvenet_cls.py
+
 import torch.nn as nn
 import torch.nn.functional as F
 

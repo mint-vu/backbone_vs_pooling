@@ -1,3 +1,5 @@
+# Source: https://github.com/tiangexiang/CurveNet/blob/main/core/models/walk.py
+
 """
 @Author: Tiange Xiang
 @Contact: txia7609@uni.sydney.edu.au
