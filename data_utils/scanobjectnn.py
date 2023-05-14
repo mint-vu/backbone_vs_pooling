@@ -1,7 +1,4 @@
 # Source: https://github.com/ma-xu/pointMLP-pytorch/blob/main/classification_ScanObjectNN/ScanObjectNN.py
-"""
-ScanObjectNN download: http://103.24.77.34/scanobjectnn/h5_files.zip
-"""
 
 import os
 import sys
