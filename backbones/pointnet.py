@@ -1,4 +1,4 @@
-# Source: https://github.com/fxia22/pointnet.pytorch/blob/master/pointnet/model.py
+# Source: https://github.com/fxia22/pointnet.pytorch/blob/master/pointnet/model.py (MIT License)
 
 import torch
 import torch.nn as nn

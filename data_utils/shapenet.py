@@ -1,4 +1,4 @@
-# Source: https://github.com/fxia22/pointnet.pytorch/blob/master/pointnet/dataset.py
+# Source: https://github.com/fxia22/pointnet.pytorch/blob/master/pointnet/dataset.py (MIT License)
 
 from __future__ import print_function
 import torch.utils.data as data

@@ -1,4 +1,4 @@
-# Source: https://github.com/tiangexiang/CurveNet/blob/main/core/models/curvenet_util.py
+# Source: https://github.com/tiangexiang/CurveNet/blob/main/core/models/curvenet_util.py (MIT License)
 
 """
 @Author: Yue Wang

@@ -1,4 +1,4 @@
-# Source: https://github.com/Strawberry-Eat-Mango/PCT_Pytorch/blob/main/data.py
+# Source: https://github.com/Strawberry-Eat-Mango/PCT_Pytorch/blob/main/data.py (MIT License)
 
 import os
 import glob

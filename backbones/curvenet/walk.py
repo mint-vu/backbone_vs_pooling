@@ -1,4 +1,4 @@
-# Source: https://github.com/tiangexiang/CurveNet/blob/main/core/models/walk.py
+# Source: https://github.com/tiangexiang/CurveNet/blob/main/core/models/walk.py (MIT License)
 
 """
 @Author: Tiange Xiang

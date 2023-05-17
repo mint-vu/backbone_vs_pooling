@@ -1,4 +1,4 @@
-# Source: https://github.com/ma-xu/pointMLP-pytorch/blob/main/classification_ScanObjectNN/ScanObjectNN.py
+# Source: https://github.com/ma-xu/pointMLP-pytorch/blob/main/classification_ScanObjectNN/ScanObjectNN.py (Apache License 2.0) (modified from original source)
 
 import os
 import sys

@@ -1,4 +1,4 @@
-# Source: https://github.com/tiangexiang/CurveNet/blob/main/core/models/curvenet_cls.py
+# Source: https://github.com/tiangexiang/CurveNet/blob/main/core/models/curvenet_cls.py (MIT License)
 
 import torch.nn as nn
 import torch.nn.functional as F

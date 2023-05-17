@@ -1,4 +1,4 @@
-# Source: https://github.com/Snowdar/asv-subtools/blob/master/pytorch/libs/nnet/pooling.py
+# Source: https://github.com/Snowdar/asv-subtools/blob/master/pytorch/libs/nnet/pooling.py (Apache License 2.0)
 
 import torch
 import torch.nn as nn

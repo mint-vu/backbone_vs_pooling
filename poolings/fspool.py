@@ -1,4 +1,4 @@
-# Source: https://github.com/Cyanogenoid/fspool
+# Source: https://github.com/Cyanogenoid/fspool (MIT License)
 
 import torch
 import torch.nn as nn

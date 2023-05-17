@@ -1,4 +1,4 @@
-# Source: https://github.com/WangYueFt/dgcnn/blob/master/pytorch/model.py
+# Source: https://github.com/WangYueFt/dgcnn/blob/master/pytorch/model.py (MIT License)
 
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-

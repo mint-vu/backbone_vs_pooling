@@ -1,4 +1,4 @@
-# Source: https://github.com/juho-lee/set_transformer
+# Source: https://github.com/juho-lee/set_transformer (MIT License)
 
 import torch
 import torch.nn as nn
