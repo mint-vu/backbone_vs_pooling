@@ -29,7 +29,7 @@ import time
 
 base_seed = 5555
 batch_size = 32
-num_epochs = 500
+num_epochs = 300
 early_stopping_patience = 100
 num_points_per_set = 1024
 min_lr = 0.005
