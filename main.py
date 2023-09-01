@@ -116,7 +116,7 @@ if __name__ == '__main__':
     parser.add_argument('-c', '--couple', action='store_true', default=False, help='Couple all specified poolings', required=False)
     parser.add_argument('-d', '--dataset', type=str, default='modelnet', help='Dataset to use', required=False)
     parser.add_argument('-e', '--num_experiments', type=int, default=1, help='Number of experiments', required=False)
-    parser.add_argument('-o', '--optimizer', type=str, default='adam', help='Optimizer (either adam or sgd)', required=False)
+    parser.add_argument('-o', '--optimizer', type=str, default='sgd', help='Optimizer (either adam or sgd)', required=False)
     parser.add_argument('-g', '--gpus', type=int, nargs="*", default=list(range(torch.cuda.device_count())), help='GPUs to use', required=False)
 
     parser.add_argument('-ds', '--dataset_size', type=float, default=0.99, help='Fraction of dataset to use', required=False)

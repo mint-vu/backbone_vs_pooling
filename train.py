@@ -1,7 +1,7 @@
 import torch
 from torch import nn
 from torch.optim import Adam, SGD
-from torch.optim.lr_scheduler import StepLR
+from torch.optim.lr_scheduler import StepLR, CosineAnnealingLR
 from torch.utils.data import DataLoader
 
 import sys
@@ -30,9 +30,14 @@ import time
 base_seed = 5555
 batch_size = 32
 num_epochs = 500
-early_stopping_patience = 20
-lr = 8e-4
+early_stopping_patience = 100
 num_points_per_set = 1024
+min_lr = 0.005
+
+# Optimizer hyperparameters
+lr = 0.1
+momentum = 0.9
+weight_decay = 2e-4
 
 DATASETS = {
     'modelnet': ModelNet40,
@@ -109,9 +114,10 @@ def train_test(backbone_type, pooling_type, dataset='modelnet', dataset_size=0.9
     if list(classifier.parameters()):
         params += list(classifier.parameters())
     
-    optimizer = Adam if optimizer == 'adam' else SGD
-    optim = optimizer(params, lr=lr)
-    scheduler = StepLR(optim, step_size=50, gamma=0.5)
+    optimizer = SGD # Adam if optimizer == 'adam' else SGD
+    optim = optimizer(params, lr=lr, momentum=momentum, weight_decay=weight_decay)
+    # scheduler = StepLR(optim, step_size=50, gamma=0.5)
+    scheduler = CosineAnnealingLR(optim, num_epochs, eta_min=min_lr)
 
     epochMetrics = defaultdict(list)
     early_stopping_reached = False
