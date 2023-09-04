@@ -54,7 +54,7 @@ class ModelNet40(Dataset):
     num_classes = 40
     classes = ['airplane', 'bathtub', 'bed', 'bench', 'bookshelf', 'bottle', 'bowl', 'car', 'chair', 'cone', 'cup', 'curtain', 'desk', 'door', 'dresser', 'flower_pot', 'glass_box', 'guitar', 'keyboard', 'lamp', 'laptop', 'mantel', 'monitor', 'night_stand', 'person', 'piano', 'plant', 'radio', 'range_hood', 'sink', 'sofa', 'stairs', 'stool', 'table', 'tent', 'toilet', 'tv_stand', 'vase', 'wardrobe', 'xbox']
 
-    def __init__(self, num_points, partition='train', dataset_size=0.99, seed=123):
+    def __init__(self, num_points, partition='train', dataset_size=0.975, seed=123):
         self.data, self.label = load_data('test' if partition=='test' else 'train')
 
         self.num_points = num_points
@@ -67,7 +67,7 @@ class ModelNet40(Dataset):
             idx = np.arange(size)
             np.random.shuffle(idx)
             train_idx = idx[:int(size * dataset_size)]
-            valid_idx = idx[int(size * 0.99):]
+            valid_idx = idx[int(size * 0.975):]
 
         if partition == "train":
             self.data = self.data[train_idx]
