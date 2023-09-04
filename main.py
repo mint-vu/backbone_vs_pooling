@@ -119,7 +119,7 @@ if __name__ == '__main__':
     parser.add_argument('-o', '--optimizer', type=str, default='sgd', help='Optimizer (either adam or sgd)', required=False)
     parser.add_argument('-g', '--gpus', type=int, nargs="*", default=list(range(torch.cuda.device_count())), help='GPUs to use', required=False)
 
-    parser.add_argument('-ds', '--dataset_size', type=float, default=0.99, help='Fraction of dataset to use', required=False)
+    parser.add_argument('-ds', '--dataset_size', type=float, default=0.975, help='Fraction of dataset to use', required=False)
 
     parser.add_argument('-l', '--num_layers', type=int, default=2, help='Number of layers for MLP and SAB backbones', required=False)
     parser.add_argument('-w', '--width', type=int, default=512, help='Width of MLP and SAB backbones', required=False)
