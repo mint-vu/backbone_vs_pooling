@@ -158,9 +158,9 @@ def train_test(backbone_type, pooling_type, dataset='modelnet', dataset_size=0.9
                 with torch.set_grad_enabled(phase == 'train'):
                     # pass the sets through the backbone and pooling
                     z = backbone(x)
-                    # print(f"Backbone: {z.shape}")
+                    # print(f"Backbone: {z.shape}") # 32, 1024, 3
                     v = pooling(z)
-                    # print(f"Pool output: {v.shape}")
+                    # print(f"Pool output: {v.shape}") # 32, 3
                     logits = classifier(v)
                     #print(f"Logits: {logits.shape}")
                     # print(f"y: {y.shape}")
