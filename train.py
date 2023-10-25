@@ -29,13 +29,10 @@ import time
 
 base_seed = 5555
 batch_size = 32
-num_epochs = 300
-early_stopping_patience = 100
 num_points_per_set = 1024
 min_lr = 0.005
 
 # Optimizer hyperparameters
-lr = 0.1
 momentum = 0.9
 weight_decay = 2e-4
 
@@ -45,8 +42,12 @@ DATASETS = {
     'scanobjectnn': ScanObjectNN
 }
 
-def train_test(backbone_type, pooling_type, dataset='modelnet', dataset_size=0.99, experiment_id=0, optimizer='adam', backbone_args={}, pooling_args={}, gpu_index=0):
-
+def train_test(backbone_type, pooling_type, dataset='modelnet', dataset_size=0.99, experiment_id=0, optimizer='adam', backbone_args={}, pooling_args={}, gpu_index=0, learning_rate=1e-2, num_epochs=300, early_stopping_patience = 100, scheduler='cos'):
+    
+    print('learning rate is: {}'.format(lr))
+    print('number of epochs is: {}'.format(num_epochs))
+    print('early_stopping_patience: {}'.format(early_stopping_patience))
+    
     device = f'cuda:{gpu_index}'
 
     random_seed = int(base_seed + experiment_id)
@@ -116,8 +117,13 @@ def train_test(backbone_type, pooling_type, dataset='modelnet', dataset_size=0.9
     
     optimizer = SGD # Adam if optimizer == 'adam' else SGD
     optim = optimizer(params, lr=lr, momentum=momentum, weight_decay=weight_decay)
-    # scheduler = StepLR(optim, step_size=50, gamma=0.5)
-    scheduler = CosineAnnealingLR(optim, num_epochs, eta_min=min_lr)
+    
+    
+    if scheduler=='cos':
+        scheduler = CosineAnnealingLR(optim, num_epochs, eta_min=min_lr)
+    else:
+        scheduler = StepLR(optim, step_size=50, gamma=0.5)
+        
 
     epochMetrics = defaultdict(list)
     early_stopping_reached = False

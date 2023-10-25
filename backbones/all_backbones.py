@@ -10,8 +10,7 @@ from identity import Identity
 from mlp import MLP
 from settransformer import SetTransformer
 from dgcnn import DGCNN
-from pointnet.pointnet import PointNet
-from pointnet.pointnet2 import PointNet2
+from .pointnet import PointNet
 from curvenet.curvenet import CurveNet
 
 
