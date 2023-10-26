@@ -27,7 +27,7 @@ import os
 import json
 import time
 
-base_seed = 5555
+base_seed = 2054
 batch_size = 32
 num_points_per_set = 1024
 min_lr = 0.005
@@ -44,7 +44,7 @@ DATASETS = {
 
 def train_test(backbone_type, pooling_type, dataset='modelnet', dataset_size=0.99, experiment_id=0, optimizer='adam', backbone_args={}, pooling_args={}, gpu_index=0, learning_rate=1e-2, num_epochs=300, early_stopping_patience = 100, scheduler='cos'):
     
-    print('learning rate is: {}'.format(lr))
+    print('learning rate is: {}'.format(learning_rate))
     print('number of epochs is: {}'.format(num_epochs))
     print('early_stopping_patience: {}'.format(early_stopping_patience))
     
@@ -115,8 +115,13 @@ def train_test(backbone_type, pooling_type, dataset='modelnet', dataset_size=0.9
     if list(classifier.parameters()):
         params += list(classifier.parameters())
     
-    optimizer = SGD # Adam if optimizer == 'adam' else SGD
-    optim = optimizer(params, lr=lr, momentum=momentum, weight_decay=weight_decay)
+    if optimizer == 'adam':
+
+        optim = Adam(params, lr=learning_rate, weight_decay=weight_decay)
+
+    else:
+
+        optim = SGD(params, lr=learning_rate, momentum=momentum, weight_decay=weight_decay)
     
     
     if scheduler=='cos':
