@@ -1,0 +1,19 @@
+### Instructions to run
+
+Create and enter environment:
+```bash
+    conda create -n pointcept -python=3.10 -y
+    conda activate pointcept
+```
+
+Install libraries:
+```bash
+pip install torch==1.13.1+cu117 torchvision==0.14.1+cu117 torchaudio==0.13.1 --extra-index-url https://download.pytorch.org/whl/cu117
+conda install cudatoolkit=11.7 -c nvidia
+pip install cycler einops h5py pyyaml scikit-learn scipy tqdm matplotlib
+```
+
+Compile C++ code:
+```bash
+pip install pointnet2_ops_lib/.
+```
