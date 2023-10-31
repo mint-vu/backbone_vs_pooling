@@ -2,8 +2,8 @@
 
 Create and enter environment:
 ```bash
-    conda create -n pointcept -python=3.10 -y
-    conda activate pointcept
+conda create -n pointcept -python=3.10 -y
+conda activate pointcept
 ```
 
 Install libraries:
@@ -17,3 +17,13 @@ Compile C++ code:
 ```bash
 pip install pointnet2_ops_lib/.
 ```
+
+Resolution to CUDA error: need to specify GPU via environment instead of command line arguments. So instead of this:
+```
+python main.py -b pointmlp -p <pooling> -g <gpu>
+```
+Run the following:
+```bash
+CUDA_VISIBLE_DEVICES=<gpu> python main.py -b pointmlp -p <pooling>
+```
+

@@ -10,7 +10,8 @@ from identity import Identity
 from mlp import MLP
 from settransformer import SetTransformer
 from dgcnn import DGCNN
-from pointnet import PointNet
+from pointnet.pointnet import PointNet
+from pointnet.pointnet2 import PointNet2
 from curvenet.curvenet import CurveNet
 from pointmlp.pointmlp import pointMLP
 
@@ -35,9 +36,9 @@ class Backbone(nn.Module):
         elif backbone_type == 'pointnet':
             self.backbone = PointNet()
             self.d_out = 1024
-        # elif backbone_type == 'pointnet2':
-        #     self.backbone = PointNet2()
-        #     self.d_out = 128
+        elif backbone_type == 'pointnet2':
+            self.backbone = PointNet2()
+            self.d_out = 128
         elif backbone_type == 'curvenet':
             self.backbone = CurveNet()
             self.d_out = 1024
