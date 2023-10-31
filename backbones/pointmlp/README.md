@@ -2,8 +2,8 @@
 
 Create and enter environment:
 ```bash
-conda create -n pointcept -python=3.10 -y
-conda activate pointcept
+conda create -n [env_name] -python=3.10 -y
+conda activate [env_name]
 ```
 
 Install libraries:
