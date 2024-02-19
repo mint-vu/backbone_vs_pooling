@@ -118,9 +118,9 @@ if __name__ == '__main__':
     parser.add_argument('-e', '--num_experiments', type=int, default=1, help='Number of experiments', required=False)
     parser.add_argument('-o', '--optimizer', type=str, default='sgd', help='Optimizer (either adam or sgd)', required=False)
     parser.add_argument('-g', '--gpus', type=int, nargs="*", default=list(range(torch.cuda.device_count())), help='GPUs to use', required=False)
-    parser.add_argument('-lr', '--learning_rate', type=float, default=1e-2, help='learning rate', required=False)
+    parser.add_argument('-lr', '--learning_rate', type=float, default=1e-3, help='learning rate', required=False)
     parser.add_argument('-sc', '--scheduler', type=str, default='cos', help='learning rate scheduler', required=False)
-    parser.add_argument('-n_epochs', '--num_epochs', type=int, default=200, help='number of epochs', required=False)
+    parser.add_argument('-n', '--num_epochs', type=int, default=300, help='number of epochs', required=False)
     parser.add_argument('-es', '--early_stopping_patience', type=int, default=200, help='number of early stopping patience', required=False)
     parser.add_argument('-ds', '--dataset_size', type=float, default=0.975, help='Fraction of dataset to use', required=False)
 

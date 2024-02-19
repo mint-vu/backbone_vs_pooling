@@ -34,7 +34,7 @@ min_lr = 0.005
 
 # Optimizer hyperparameters
 momentum = 0.9
-weight_decay = 2e-4
+weight_decay = 1e-4
 
 DATASETS = {
     'modelnet': ModelNet40,
@@ -116,18 +116,14 @@ def train_test(backbone_type, pooling_type, dataset='modelnet', dataset_size=0.9
         params += list(classifier.parameters())
     
     if optimizer == 'adam':
-
         optim = Adam(params, lr=learning_rate, weight_decay=weight_decay)
-
     else:
-
         optim = SGD(params, lr=learning_rate, momentum=momentum, weight_decay=weight_decay)
-    
     
     if scheduler=='cos':
         scheduler = CosineAnnealingLR(optim, num_epochs, eta_min=min_lr)
     else:
-        scheduler = StepLR(optim, step_size=50, gamma=0.5)
+        scheduler = StepLR(optim, step_size=20, gamma=0.7)
         
 
     epochMetrics = defaultdict(list)

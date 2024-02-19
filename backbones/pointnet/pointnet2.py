@@ -30,12 +30,12 @@ class PointNet2(nn.Module):
 
         l1_xyz, l1_points = self.sa1(xyz, None)
         l2_xyz, l2_points = self.sa2(l1_xyz, l1_points)
-        l3_points = self.sa3(l2_xyz, l2_points)
+        _, l3_points = self.sa3(l2_xyz, l2_points)
         # x = l3_points.view(B, 1024)
         # x = self.drop1(F.relu(self.bn1(self.fc1(x))))
         # x = self.drop2(F.relu(self.bn2(self.fc2(x))))
         # x = self.fc3(x)
         # x = F.log_softmax(x, -1)
 
-        return l3_points
+        return l3_points.repeat(1,1,1024).permute(0,2,1)
         # return x,l3_points

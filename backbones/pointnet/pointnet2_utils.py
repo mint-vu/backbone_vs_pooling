@@ -92,7 +92,6 @@ def query_ball_point(radius, nsample, xyz, new_xyz):
     group_idx[mask] = group_first[mask]
     return group_idx
 
-
 def sample_and_group(npoint, radius, nsample, xyz, points, returnfps=False):
     """
     Input:
@@ -118,8 +117,10 @@ def sample_and_group(npoint, radius, nsample, xyz, points, returnfps=False):
         new_points = torch.cat([grouped_xyz_norm, grouped_points], dim=-1) # [B, npoint, nsample, C+D]
     else:
         new_points = grouped_xyz_norm
-
-    return new_points
+    if returnfps:
+        return new_xyz, new_points, grouped_xyz, fps_idx
+    else:
+        return new_xyz, new_points
 
 
 def sample_and_group_all(xyz, points):
@@ -131,13 +132,15 @@ def sample_and_group_all(xyz, points):
         new_xyz: sampled points position data, [B, 1, 3]
         new_points: sampled points data, [B, 1, N, 3+D]
     """
+    device = xyz.device
     B, N, C = xyz.shape
+    new_xyz = torch.zeros(B, 1, C).to(device)
     grouped_xyz = xyz.view(B, 1, N, C)
     if points is not None:
         new_points = torch.cat([grouped_xyz, points.view(B, 1, N, -1)], dim=-1)
     else:
         new_points = grouped_xyz
-    return new_points
+    return new_xyz, new_points
 
 
 class PointNetSetAbstractionMsg(nn.Module):
@@ -229,9 +232,9 @@ class PointNetSetAbstraction(nn.Module):
             points = points.permute(0, 2, 1)
 
         if self.group_all:
-            new_points = sample_and_group_all(xyz, points)
+            new_xyz, new_points = sample_and_group_all(xyz, points)
         else:
-            new_points = sample_and_group(self.npoint, self.radius, self.nsample, xyz, points)
+            new_xyz, new_points = sample_and_group(self.npoint, self.radius, self.nsample, xyz, points)
         # new_xyz: sampled points position data, [B, npoint, C]
         # new_points: sampled points data, [B, npoint, nsample, C+D]
         new_points = new_points.permute(0, 3, 2, 1) # [B, C+D, nsample,npoint]
@@ -239,6 +242,6 @@ class PointNetSetAbstraction(nn.Module):
             bn = self.mlp_bns[i]
             new_points =  F.relu(bn(conv(new_points)))
 
-        # new_points = torch.max(new_points, 2)[0]
-        # new_xyz = new_xyz.permute(0, 2, 1)
-        return new_points.squeeze()
+        new_points = torch.max(new_points, 2)[0]
+        new_xyz = new_xyz.permute(0, 2, 1)
+        return new_xyz, new_points
