@@ -43,7 +43,7 @@ class STNkd(nn.Module):
         return x
 
 class PointNet(nn.Module):
-    def __init__(self, global_feat = True):
+    def __init__(self):
         super().__init__()
         self.stn = STNkd(k=3)
         self.conv1 = torch.nn.Conv1d(3, 64, 1)
@@ -52,20 +52,22 @@ class PointNet(nn.Module):
         self.bn1 = nn.BatchNorm1d(64)
         self.bn2 = nn.BatchNorm1d(128)
         self.bn3 = nn.BatchNorm1d(1024)
-        self.global_feat = global_feat
+        self.fstn = STNkd(k=64)
 
     def forward(self, x):
-
         x = x.permute(0, 2, 1).contiguous()
 
-        n_pts = x.size()[2]
         trans = self.stn(x)
         x = x.transpose(2, 1)
         x = torch.bmm(x, trans)
         x = x.transpose(2, 1)
         x = F.relu(self.bn1(self.conv1(x)))
 
-        pointfeat = x
+        trans_feat = self.fstn(x)
+        x = x.transpose(2, 1)
+        x = torch.bmm(x, trans_feat)
+        x = x.transpose(2, 1)
+
         x = F.relu(self.bn2(self.conv2(x)))
         x = self.bn3(self.conv3(x))
 
