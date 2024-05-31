@@ -30,7 +30,7 @@ import time
 base_seed = 2054
 batch_size = 32
 num_points_per_set = 1024
-min_lr = 0.005
+min_lr = 0.001
 
 # Optimizer hyperparameters
 momentum = 0.9
@@ -63,7 +63,7 @@ def train_test(backbone_type, pooling_type, dataset='modelnet', dataset_size=0.9
     # create results directory if it doesn't exist
     backbone_config = "_".join([str(v) for v in backbone_args.values()])
     pooling_config = "_".join([str(v) for v in pooling_args.values()])
-    results_dir = f"./results/{dataset}-{dataset_size}/{backbone_type}_{pooling_type}/{backbone_config}/{pooling_config}"
+    results_dir = f"./results/{dataset}-{dataset_size}/{backbone_type}_{pooling_type}_{experiment_id}/{backbone_config}/{pooling_config}"
     os.makedirs(results_dir, exist_ok=True)
 
     with open(os.path.join(results_dir, 'backbone_args.json'), 'w') as f:
@@ -118,7 +118,7 @@ def train_test(backbone_type, pooling_type, dataset='modelnet', dataset_size=0.9
     if optimizer == 'adam':
         optim = Adam(params, lr=learning_rate, weight_decay=weight_decay)
     else:
-        optim = SGD(params, lr=learning_rate, momentum=momentum, weight_decay=weight_decay)
+        optim = SGD(params, lr=100*learning_rate, momentum=momentum, weight_decay=weight_decay)
     
     if scheduler=='cos':
         scheduler = CosineAnnealingLR(optim, num_epochs, eta_min=min_lr)

@@ -13,10 +13,11 @@ from dgcnn import DGCNN
 from pointnet.pointnet import PointNet
 from pointnet.pointnet2 import PointNet2
 from curvenet.curvenet import CurveNet
-from backbones.pointmlp import pointMLP
+from pointmlp import pointMLP
 from pointnext.pointnext import PointNextEncoder
+from pointtransformer import PointTransformerV2
 
-BACKBONES = ['idt', 'mlp', 'sab', 'isab', 'dgcnn', 'pointnet', 'pointnet2', 'curvenet', 'pointmlp']
+BACKBONES = ['idt', 'mlp', 'sab', 'isab', 'dgcnn', 'pointnet', 'pointnet2', 'curvenet', 'pointmlp', 'pointnext', 'pointtransformer']
 
 class Backbone(nn.Module):
     def __init__(self, backbone_type, d_in, d_out, **kwargs):
@@ -49,6 +50,9 @@ class Backbone(nn.Module):
         elif backbone_type == 'pointnext':
             self.backbone = PointNextEncoder()
             self.d_out = 512
+        elif backbone_type == 'pointtransformer':
+            self.backbone = PointTransformerV2()
+            self.d_out = 3
         else:
             raise ValueError(f'Backbone type {backbone_type} is not implemented!')
 
