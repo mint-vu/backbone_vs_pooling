@@ -10,7 +10,7 @@ Install libraries:
 ```bash
 pip install torch==1.13.1+cu117 torchvision==0.14.1+cu117 torchaudio==0.13.1 --extra-index-url https://download.pytorch.org/whl/cu117
 conda install cudatoolkit=11.7 -c nvidia -y
-pip install cycler einops h5py pyyaml scikit-learn scipy tqdm matplotlib timm torch-geometric torch-scatter torch-cluster
+pip install cycler einops h5py pyyaml scikit-learn scipy tqdm matplotlib timm torch-geometric torch-scatter torch-cluster easydict
 ```
 
 Compile C++ code:

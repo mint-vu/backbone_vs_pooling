@@ -40,7 +40,7 @@ class Backbone(nn.Module):
             self.d_out = 1024
         elif backbone_type == 'pointnet2':
             self.backbone = PointNet2()
-            self.d_out = 128
+            self.d_out = 1024
         elif backbone_type == 'curvenet':
             self.backbone = CurveNet()
             self.d_out = 1024

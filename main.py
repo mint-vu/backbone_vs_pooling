@@ -21,10 +21,14 @@ def validate(args):
     if args.all:
         args.backbones = BACKBONES
         args.poolings = POOLINGS
-        return
     else:
         if not args.backbones or not args.poolings:
             raise ValueError('Backbones and poolings must be specified')
+
+    if args.backbones[-1].lower() == 'all':
+        args.backbones = BACKBONES
+    if args.poolings[-1].lower() == 'all':
+        args.poolings = POOLINGS
 
     backbones = args.backbones
     poolings = args.poolings
